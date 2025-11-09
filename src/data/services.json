@@ -1,0 +1,1747 @@
+{
+  "currency": "INR",
+  "tiers": [
+    {
+      "tier": "Minimal",
+      "categories": [
+        {
+          "category": "Clean up",
+          "items": [
+            {
+              "name": "Basic Clean Up",
+              "brand": "Lotus",
+              "productCost": 59,
+              "marketPrice": 250,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Detan Clean Up",
+              "brand": "Keya Seth",
+              "productCost": 124,
+              "marketPrice": 349,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Insta Glow Clean up",
+              "brand": "Aroma Magic",
+              "productCost": 189,
+              "marketPrice": 499,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Ayurvedic Clean up",
+              "brand": "Aroma Magic",
+              "productCost": 195,
+              "marketPrice": 599,
+              "durationMinutes": 45
+            }
+          ]
+        },
+        {
+          "category": "Facial",
+          "items": [
+            {
+              "name": "Brightning Facial",
+              "brand": "Keya Seth",
+              "productCost": 82,
+              "marketPrice": 399,
+              "durationMinutes": 50
+            },
+            {
+              "name": "Ubtan Hydration Facial",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 70
+            },
+            {
+              "name": "Aswagandha Facial",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 70
+            },
+            {
+              "name": "Gold Facial",
+              "brand": "Lotus",
+              "productCost": 259,
+              "marketPrice": 799,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Diamond Facial",
+              "brand": "VLCC / Lotus",
+              "productCost": 312,
+              "marketPrice": 899,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Skin Tightening Facial",
+              "brand": "Keya Seth Tetra",
+              "productCost": null,
+              "marketPrice": 1200,
+              "durationMinutes": 45
+            }
+          ]
+        },
+        {
+          "category": "Bleach",
+          "items": [
+            {
+              "name": "Both Hand",
+              "brand": "Oxy life/ Fem",
+              "productCost": 188,
+              "marketPrice": 300,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Both Leg [Half]",
+              "brand": "Oxy life/ Fem",
+              "productCost": 376,
+              "marketPrice": 499,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Both Leg [Full]",
+              "brand": "Oxy life/ Fem",
+              "productCost": 752,
+              "marketPrice": 599,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Back",
+              "brand": "Oxy life/ Fem",
+              "productCost": 188,
+              "marketPrice": 249,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Half Back",
+              "brand": "Oxy life/ Fem",
+              "productCost": 125,
+              "marketPrice": 199,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Shoulder with Neck",
+              "brand": "Oxy life/ Fem",
+              "productCost": 125,
+              "marketPrice": 149,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Underarms [Both]",
+              "brand": "Oxy life/ Fem",
+              "productCost": 125,
+              "marketPrice": 149,
+              "durationMinutes": 30
+            }
+          ]
+        },
+        {
+          "category": "Waxing",
+          "items": [
+            {
+              "name": "Full Leg",
+              "brand": "Sleek",
+              "productCost": 100,
+              "marketPrice": 400,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Half Leg",
+              "brand": "Sleek",
+              "productCost": 66,
+              "marketPrice": 249,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Hand",
+              "brand": "Sleek",
+              "productCost": 66,
+              "marketPrice": 300,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Half Hand",
+              "brand": "Sleek",
+              "productCost": 50,
+              "marketPrice": 179,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Full Back",
+              "brand": "Sleek",
+              "productCost": 66,
+              "marketPrice": 249,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Half Back",
+              "brand": "Sleek",
+              "productCost": 50,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Underarms [Both]",
+              "brand": "Sleek",
+              "productCost": 25,
+              "marketPrice": 100,
+              "durationMinutes": 10
+            }
+          ]
+        },
+        {
+          "category": "Pedicure",
+          "items": [
+            {
+              "name": "Basic Pedicure",
+              "brand": "Lotus",
+              "productCost": 112,
+              "marketPrice": 699,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Real Fruit Pedicure",
+              "brand": "Lotus",
+              "productCost": 133,
+              "marketPrice": 799,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Full Leg Detan Pedicure",
+              "brand": "Ragga",
+              "productCost": 114,
+              "marketPrice": 999,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Lemon Pedicure",
+              "brand": "Aroma Magic",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 80
+            }
+          ]
+        },
+        {
+          "category": "Manicure",
+          "items": [
+            {
+              "name": "Basic Manicure",
+              "brand": "Lotus",
+              "productCost": 112,
+              "marketPrice": 399,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Real Fruit Manicure",
+              "brand": "Lotus",
+              "productCost": 133,
+              "marketPrice": 499,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Full Hand Detan Manicure",
+              "brand": "Ragga",
+              "productCost": 114,
+              "marketPrice": 899,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Lemon Manicure",
+              "brand": "Aroma Magic",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 80
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tier": "Exclusive",
+      "categories": [
+        {
+          "category": "Clean up",
+          "items": [
+            {
+              "name": "Glow Clean Up",
+              "brand": "VLCC",
+              "productCost": 70,
+              "marketPrice": 499,
+              "durationMinutes": 35
+            },
+            {
+              "name": "Korean Clean Up",
+              "brand": "Elysian",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 45
+            },
+            {
+              "name": "O3+ Detan Clean Up",
+              "brand": "O3+",
+              "productCost": 154,
+              "marketPrice": 599,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Aroma Magic Glow Clean Up",
+              "brand": "Aroma Magic",
+              "productCost": 182,
+              "marketPrice": 499,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Hydra Boost Clean Up",
+              "brand": "Skin Miracle",
+              "productCost": 142,
+              "marketPrice": 599,
+              "durationMinutes": 50
+            },
+            {
+              "name": "Oil Control Clean up",
+              "brand": "Richelon",
+              "productCost": 205,
+              "marketPrice": 499,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Skin Tightening Clean Up",
+              "brand": "Richelon",
+              "productCost": 205,
+              "marketPrice": 499,
+              "durationMinutes": null
+            },
+            {
+              "name": "Clean Up With Real Fruit",
+              "brand": "Pilgrim/ Sara",
+              "productCost": 300,
+              "marketPrice": 599,
+              "durationMinutes": 45
+            }
+          ]
+        },
+        {
+          "category": "Facial",
+          "items": [
+            {
+              "name": "BASIC Facial",
+              "brand": "Aroma Magic",
+              "productCost": 260,
+              "marketPrice": 699,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Charcoal Detox Facial",
+              "brand": "Aroma Magic",
+              "productCost": 400,
+              "marketPrice": 1049,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Detan Skin Tightening Facial",
+              "brand": "Ragga",
+              "productCost": 267,
+              "marketPrice": 1299,
+              "durationMinutes": 70
+            },
+            {
+              "name": "Fruit Facial",
+              "brand": "Richelon",
+              "productCost": 205,
+              "marketPrice": 1199,
+              "durationMinutes": 70
+            },
+            {
+              "name": "Wine Glow Facial",
+              "brand": "Elysian",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Hydra Boost Facial",
+              "brand": "Welocity",
+              "productCost": 500,
+              "marketPrice": 1499,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Stay Youthful Facial",
+              "brand": "O3+",
+              "productCost": 532,
+              "marketPrice": 1799,
+              "durationMinutes": 90
+            },
+            {
+              "name": "Korean Youthful Facial",
+              "brand": "Moonstar",
+              "productCost": 422,
+              "marketPrice": 1799,
+              "durationMinutes": 90
+            },
+            {
+              "name": "Oil Control Facial",
+              "brand": "Richelon",
+              "productCost": 205,
+              "marketPrice": 1199,
+              "durationMinutes": 90
+            },
+            {
+              "name": "Facial with Vit C",
+              "brand": "Mamaearth",
+              "productCost": 175,
+              "marketPrice": 799,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Moroccan Argan Oil Facial",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Anti-Aging Treatment (Signature Item)",
+              "brand": "Richelon",
+              "productCost": 205,
+              "marketPrice": 1899,
+              "durationMinutes": 105
+            },
+            {
+              "name": "Dark Circle Treatment (Signature Item)",
+              "brand": "Aroma Magic",
+              "productCost": null,
+              "marketPrice": 1299,
+              "durationMinutes": 45
+            }
+          ]
+        },
+        {
+          "category": "ADD On Facial",
+          "items": [
+            {
+              "name": "Laser Light Therapy Face Mask",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Charcoal Algae Mask",
+              "brand": "Cosderma",
+              "productCost": 84,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Marine Algae Mask",
+              "brand": "Nandini",
+              "productCost": 143,
+              "marketPrice": 229,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Korean Day & Night Sheet",
+              "brand": "SOKORA",
+              "productCost": 159,
+              "marketPrice": 299,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Lacto Calamine Sheet Mask",
+              "brand": "Lacto Calamine",
+              "productCost": 70,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Hydra Boost Face Sheet",
+              "brand": "SHILLS",
+              "productCost": 70,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Massage with Jade Roller and Face Massager",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 149,
+              "durationMinutes": 10
+            }
+          ]
+        },
+        {
+          "category": "Bleach",
+          "items": [
+            {
+              "name": "Classic Bleach",
+              "brand": "Natures",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Full Arms",
+              "brand": "Natures",
+              "productCost": 76,
+              "marketPrice": 349,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Leg",
+              "brand": "Natures",
+              "productCost": 114,
+              "marketPrice": 599,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Back",
+              "brand": "Natures",
+              "productCost": 76,
+              "marketPrice": 299,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Half Back",
+              "brand": "Natures",
+              "productCost": 57,
+              "marketPrice": 199,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Underarms",
+              "brand": "Natures",
+              "productCost": 57,
+              "marketPrice": 199,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Gold Bleach",
+              "brand": "VLCC",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Full Arms",
+              "brand": "VLCC",
+              "productCost": 170,
+              "marketPrice": 449,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Leg",
+              "brand": "VLCC",
+              "productCost": 256,
+              "marketPrice": 599,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Back",
+              "brand": "VLCC",
+              "productCost": 170,
+              "marketPrice": 449,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Half Back",
+              "brand": "VLCC",
+              "productCost": 128,
+              "marketPrice": 249,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Underarms",
+              "brand": "VLCC",
+              "productCost": 128,
+              "marketPrice": 199,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Diamond Bleach",
+              "brand": "VLCC",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Full Arms",
+              "brand": "VLCC",
+              "productCost": 229,
+              "marketPrice": 599,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Leg",
+              "brand": "VLCC",
+              "productCost": 344,
+              "marketPrice": 799,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Back",
+              "brand": "VLCC",
+              "productCost": 229,
+              "marketPrice": 549,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Half Back",
+              "brand": "VLCC",
+              "productCost": 172,
+              "marketPrice": 299,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Underarms",
+              "brand": "VLCC",
+              "productCost": 172,
+              "marketPrice": 249,
+              "durationMinutes": 20
+            }
+          ]
+        },
+        {
+          "category": "Waxing",
+          "items": [
+            {
+              "name": "Moroccan Honey Wax - Full Arms",
+              "brand": "HONEYBEE",
+              "productCost": 99,
+              "marketPrice": 400,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Moroccan Honey Wax - Half Arms",
+              "brand": "HONEYBEE",
+              "productCost": 74,
+              "marketPrice": 249,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Moroccan Honey Wax - Full Legs",
+              "brand": "HONEYBEE",
+              "productCost": 149,
+              "marketPrice": 300,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Moroccan Honey Wax - Half legs",
+              "brand": "HONEYBEE",
+              "productCost": 99,
+              "marketPrice": 179,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Moroccan Honey Wax - Full Back",
+              "brand": "HONEYBEE",
+              "productCost": 99,
+              "marketPrice": 249,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Moroccan Honey Wax - Half Back",
+              "brand": "HONEYBEE",
+              "productCost": 74,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Moroccan Honey Wax - Stomach wax",
+              "brand": "HONEYBEE",
+              "productCost": 74,
+              "marketPrice": 100,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Moroccan Honey Wax - Underarms",
+              "brand": "HONEYBEE",
+              "productCost": 99,
+              "marketPrice": 100,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Moroccan Roll on wax - Full Arms",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 400,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Moroccan Roll on wax - Half Arms",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 249,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Moroccan Roll on wax - Full Legs",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 300,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Moroccan Roll on wax - Half legs",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 179,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Moroccan Roll on wax - Full Back",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 249,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Moroccan Roll on wax - Half Back",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Moroccan Roll on wax - Stomach wax",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 100,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Moroccan Roll on wax - Underarms",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 100,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Rica Liposoluble Wax (White chocolate / Aloe vera) - Full Arms",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 669,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Rica Liposoluble Wax (White chocolate / Aloe vera) - Half Arms",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 499,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Rica Liposoluble Wax (White chocolate / Aloe vera) - Full Legs",
+              "brand": "RICA",
+              "productCost": 70,
+              "marketPrice": 899,
+              "durationMinutes": 40
+            },
+            {
+              "name": "Rica Liposoluble Wax (White chocolate / Aloe vera) - Half legs",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 599,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Rica Liposoluble Wax (White chocolate / Aloe vera) - Full Back",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 499,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Rica Liposoluble Wax (White chocolate / Aloe vera) - Half Back",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 249,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Rica Liposoluble Wax (White chocolate / Aloe vera) - Stomach wax",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 469,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Rica Liposoluble Wax (White chocolate / Aloe vera) - Underarms",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 199,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Rica Liposoluble Wax (Gold / Milk) - Full Arms",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 669,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Rica Liposoluble Wax (Gold / Milk) - Half Arms",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 499,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Rica Liposoluble Wax (Gold / Milk) - Full Legs",
+              "brand": "RICA",
+              "productCost": 70,
+              "marketPrice": 899,
+              "durationMinutes": 40
+            },
+            {
+              "name": "Rica Liposoluble Wax (Gold / Milk) - Half legs",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 599,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Rica Liposoluble Wax (Gold / Milk) - Full Back",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 499,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Rica Liposoluble Wax (Gold / Milk) - Half Back",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 249,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Rica Liposoluble Wax (Gold / Milk) - Stomach wax",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 469,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Rica Liposoluble Wax (Gold / Milk) - Underarms",
+              "brand": "RICA",
+              "productCost": 35,
+              "marketPrice": 199,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Richelon Liposoluble Wax (Kesar Chandan / Charcoal / Rose) - Full Arms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 669,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Richelon Liposoluble Wax (Kesar Chandan / Charcoal / Rose) - Half Arms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 499,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Richelon Liposoluble Wax (Kesar Chandan / Charcoal / Rose) - Full legs",
+              "brand": "Richelon",
+              "productCost": 70,
+              "marketPrice": 899,
+              "durationMinutes": 40
+            },
+            {
+              "name": "Richelon Liposoluble Wax (Kesar Chandan / Charcoal / Rose) - Half legs",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 599,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Richelon Liposoluble Wax (Kesar Chandan / Charcoal / Rose) - Full Back",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 499,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Richelon Liposoluble Wax (Kesar Chandan / Charcoal / Rose) - Half Back",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 249,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Richelon Liposoluble Wax (Kesar Chandan / Charcoal / Rose) - Stomach wax",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 469,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Richelon Liposoluble Wax (Kesar Chandan / Charcoal / Rose) - Underarms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 199,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Bikini Wax",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1299,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Bikini  Line Wax",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 249,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Richelon Liposoluble wax (Moroccan / Dark chocolate) - Full Arms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 669,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Richelon Liposoluble wax (Moroccan / Dark chocolate) - Half Arms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 499,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Richelon Liposoluble wax (Moroccan / Dark chocolate) - Full legs",
+              "brand": "Richelon",
+              "productCost": 70,
+              "marketPrice": 899,
+              "durationMinutes": 40
+            },
+            {
+              "name": "Richelon Liposoluble wax (Moroccan / Dark chocolate) - Half legs",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 599,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Richelon Liposoluble wax (Moroccan / Dark chocolate) - Full Back",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 499,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Richelon Liposoluble wax (Moroccan / Dark chocolate) - Half Back",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 249,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Richelon Liposoluble wax (Moroccan / Dark chocolate) - Stomach wax",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 469,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Richelon Liposoluble wax (Moroccan / Dark chocolate) - Underarms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 199,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Brazilian Film Wax - Full face",
+              "brand": "Richelon",
+              "productCost": 36,
+              "marketPrice": 249,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Brazilian Film Wax - Full Back",
+              "brand": "Richelon",
+              "productCost": 36,
+              "marketPrice": 499,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Brazilian Film Wax - Half Back",
+              "brand": "Richelon",
+              "productCost": 36,
+              "marketPrice": 299,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Brazilian Film Wax - Stomach wax",
+              "brand": "Richelon",
+              "productCost": 36,
+              "marketPrice": 469,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Brazilian Film Wax - Underarms",
+              "brand": "Richelon",
+              "productCost": 36,
+              "marketPrice": 199,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Brazilian Film Wax - Bikini Wax",
+              "brand": "Richelon",
+              "productCost": 36,
+              "marketPrice": 1499,
+              "durationMinutes": 35
+            },
+            {
+              "name": "Brazilian Film Wax - Bikini  Line Wax",
+              "brand": "Richelon",
+              "productCost": 36,
+              "marketPrice": 349,
+              "durationMinutes": 20
+            }
+          ]
+        },
+        {
+          "category": "Pedicure",
+          "items": [
+            {
+              "name": "Classic Pedicure",
+              "brand": "Richelon",
+              "productCost": 110,
+              "marketPrice": 1199,
+              "durationMinutes": 55
+            },
+            {
+              "name": "ICE cream delight",
+              "brand": "Richelon",
+              "productCost": 200,
+              "marketPrice": 1359,
+              "durationMinutes": 65
+            },
+            {
+              "name": "Korean Chocolate & Vanilla Pedicure",
+              "brand": "Elysian",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Candle Spa Pedicure",
+              "brand": "SARA",
+              "productCost": 114,
+              "marketPrice": 1299,
+              "durationMinutes": 70
+            },
+            {
+              "name": "Paraffine wax pedicure",
+              "brand": "Richelon",
+              "productCost": 199,
+              "marketPrice": 1899,
+              "durationMinutes": null
+            }
+          ]
+        },
+        {
+          "category": "Manicure",
+          "items": [
+            {
+              "name": "Classic Manicure",
+              "brand": "Richelon",
+              "productCost": 110,
+              "marketPrice": 999,
+              "durationMinutes": 55
+            },
+            {
+              "name": "ICE cream delight",
+              "brand": "Richelon",
+              "productCost": 200,
+              "marketPrice": 1159,
+              "durationMinutes": 65
+            },
+            {
+              "name": "Korean Chocolate & Vanilla Manicure",
+              "brand": "Elysian",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Candle Spa Manicure",
+              "brand": "SARA",
+              "productCost": 114,
+              "marketPrice": 1299,
+              "durationMinutes": 70
+            },
+            {
+              "name": "Manicure Add-on",
+              "brand": null,
+              "productCost": 199,
+              "marketPrice": 1699,
+              "durationMinutes": null
+            }
+          ]
+        },
+        {
+          "category": "Head",
+          "items": [
+            {
+              "name": "HAIR Oil Massage (Signature Item)",
+              "brand": "Home Made Product Ayurvedic",
+              "productCost": 150,
+              "marketPrice": 399,
+              "durationMinutes": 45
+            },
+            {
+              "name": "SPA with Dandruff Treatment (Exclude shampoo and wash)",
+              "brand": "Loreal & Keya Seth",
+              "productCost": 215,
+              "marketPrice": 1499,
+              "durationMinutes": 70
+            },
+            {
+              "name": "SPA with Hairfall Treatment (Exclude shampoo and wash)",
+              "brand": "Loreal & Keya Seth",
+              "productCost": 215,
+              "marketPrice": 1499,
+              "durationMinutes": 70
+            },
+            {
+              "name": "HYDRA Treatment (Signature Item)",
+              "brand": "Loreal & Ayurvedic",
+              "productCost": 200,
+              "marketPrice": 1799,
+              "durationMinutes": 105
+            }
+          ]
+        },
+        {
+          "category": "Hair Colour",
+          "items": [
+            {
+              "name": "GLOBAL Base Colour (Application)",
+              "brand": "Loreal Majirel",
+              "productCost": 399,
+              "marketPrice": 2999,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Global Fashion Shade (Application)",
+              "brand": "Loreal Majirel",
+              "productCost": 399,
+              "marketPrice": 3999,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Highlight (per stick) [Application]",
+              "brand": "Loreal",
+              "productCost": 99,
+              "marketPrice": 249,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Funky colour (per stick) [Application]",
+              "brand": "Streax",
+              "productCost": 95,
+              "marketPrice": 199,
+              "durationMinutes": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tier": "E-Lite",
+      "categories": [
+        {
+          "category": "Clean up",
+          "items": [
+            {
+              "name": "Detox Clean up",
+              "brand": "Mintree",
+              "productCost": 464,
+              "marketPrice": 1599,
+              "durationMinutes": 55
+            },
+            {
+              "name": "Hydra boost Clean up",
+              "brand": "Repecharge",
+              "productCost": 840,
+              "marketPrice": 1799,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Derma Clean up",
+              "brand": "Derma Co.",
+              "productCost": 200,
+              "marketPrice": 1599,
+              "durationMinutes": 60
+            }
+          ]
+        },
+        {
+          "category": "Facial",
+          "items": [
+            {
+              "name": "Glycolic Acid Facial",
+              "brand": "Ainhoa",
+              "productCost": null,
+              "marketPrice": 2499,
+              "durationMinutes": null
+            },
+            {
+              "name": "Sea - algae Facial",
+              "brand": "Casmara",
+              "productCost": null,
+              "marketPrice": 3799,
+              "durationMinutes": null
+            },
+            {
+              "name": "Vit A & Vit E Facial",
+              "brand": "Ainhoa",
+              "productCost": null,
+              "marketPrice": 2099,
+              "durationMinutes": null
+            },
+            {
+              "name": "Oil Control Facial",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Derma Hydra boost facial",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Detan To Detan Facial",
+              "brand": "Richelon",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "To Be Hydrated",
+              "brand": "Richelon",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Collagen Boosting Facial",
+              "brand": "Richelon",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Korean facial",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Peptide Glass Skin Facial",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Brown Algae Anti-aging treatment",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Sea - algae Hydra Boost Facial",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Korean Glass Hydration",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            }
+          ]
+        },
+        {
+          "category": "ADD On Facial",
+          "items": [
+            {
+              "name": "Light Therapy Face Mask",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Charcoal Algae Peel off",
+              "brand": "Cosderma",
+              "productCost": 84,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Marine Algae Peel off",
+              "brand": "Nandini",
+              "productCost": 143,
+              "marketPrice": 229,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Korean Day & Night Sheet mask",
+              "brand": "SOKORA",
+              "productCost": 159,
+              "marketPrice": 299,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Lacto Calamine Sheet mask",
+              "brand": "Lacto Calamine",
+              "productCost": 70,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Hydra Boost Sheet Mask",
+              "brand": "SHILLS",
+              "productCost": 70,
+              "marketPrice": 199,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Jade Roller Massage",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": 149,
+              "durationMinutes": 10
+            }
+          ]
+        },
+        {
+          "category": "Bleach",
+          "items": [
+            {
+              "name": "Full Arms",
+              "brand": "Manic Panic",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Leg",
+              "brand": "Manic Panic",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Full Back",
+              "brand": "Manic Panic",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Half Back",
+              "brand": "Manic Panic",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Underarms",
+              "brand": "Manic Panic",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 20
+            }
+          ]
+        },
+        {
+          "category": "Waxing",
+          "items": [
+            {
+              "name": "Cirepil Roll on - Full Arms",
+              "brand": "Cirepil",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Cirepil Roll on - Half Arms",
+              "brand": "Cirepil",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Cirepil Roll on - Full Legs",
+              "brand": "Cirepil",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Cirepil Roll on - Half legs",
+              "brand": "Cirepil",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Cirepil Roll on - Full Back",
+              "brand": "Cirepil",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Cirepil Roll on - Half Back",
+              "brand": "Cirepil",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Cirepil Roll on - Stomach wax",
+              "brand": "Cirepil",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 10
+            },
+            {
+              "name": "Cirepil Roll on - Underarms",
+              "brand": "Cirepil",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 10
+            },
+            {
+              "name": "SOKORA WAX - Full Arms",
+              "brand": "SOKORA",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "SOKORA WAX - Half Arms",
+              "brand": "SOKORA",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 15
+            },
+            {
+              "name": "SOKORA WAX - Full Legs",
+              "brand": "SOKORA",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 40
+            },
+            {
+              "name": "SOKORA WAX - Half legs",
+              "brand": "SOKORA",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "SOKORA WAX - Full Back",
+              "brand": "SOKORA",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "SOKORA WAX - Half Back",
+              "brand": "SOKORA",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 20
+            },
+            {
+              "name": "SOKORA WAX - Stomach wax",
+              "brand": "SOKORA",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 20
+            },
+            {
+              "name": "SOKORA WAX - Underarms",
+              "brand": "SOKORA",
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Korean Wax - Full Arms",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Korean Wax - Half Arms",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Korean Wax - Full Legs",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 40
+            },
+            {
+              "name": "Korean Wax - Half legs",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Korean Wax - Full Back",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Korean Wax - Half Back",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Korean Wax - Stomach wax",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Korean Wax - Underarms",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 15
+            },
+            {
+              "name": "PLATINUM WAX - Full Arms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1499,
+              "durationMinutes": 30
+            },
+            {
+              "name": "PLATINUM WAX - Half Arms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1199,
+              "durationMinutes": 15
+            },
+            {
+              "name": "PLATINUM WAX - Full Legs",
+              "brand": "Richelon",
+              "productCost": 70,
+              "marketPrice": 1699,
+              "durationMinutes": 40
+            },
+            {
+              "name": "PLATINUM WAX - Half legs",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1299,
+              "durationMinutes": 30
+            },
+            {
+              "name": "PLATINUM WAX - Full Back",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1299,
+              "durationMinutes": 30
+            },
+            {
+              "name": "PLATINUM WAX - Half Back",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1199,
+              "durationMinutes": 20
+            },
+            {
+              "name": "PLATINUM WAX - Stomach wax",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1299,
+              "durationMinutes": 20
+            },
+            {
+              "name": "PLATINUM WAX - Underarms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 999,
+              "durationMinutes": 15
+            },
+            {
+              "name": "Brazilian Film Wax - Full Back",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1499,
+              "durationMinutes": 45
+            },
+            {
+              "name": "Brazilian Film Wax - Half Back",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 1499,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Brazilian Film Wax - Stomach wax",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 999,
+              "durationMinutes": 30
+            },
+            {
+              "name": "Brazilian Film Wax - Underarms",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 999,
+              "durationMinutes": 20
+            },
+            {
+              "name": "Brazilian Film Wax - Bikini wax",
+              "brand": "Richelon",
+              "productCost": 70,
+              "marketPrice": 1599,
+              "durationMinutes": 35
+            },
+            {
+              "name": "Brazilian Film Wax - Bikini line wax",
+              "brand": "Richelon",
+              "productCost": 35,
+              "marketPrice": 999,
+              "durationMinutes": 20
+            }
+          ]
+        },
+        {
+          "category": "Pedicure",
+          "items": [
+            {
+              "name": "Cream Delight Pedicure - with Heel",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Cream Delight Pedicure - Without Heel",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "O3+ Pedicure - With Heel",
+              "brand": "O3+",
+              "productCost": 290,
+              "marketPrice": 2499,
+              "durationMinutes": 80
+            },
+            {
+              "name": "O3+ Pedicure - Without Heel",
+              "brand": "O3+",
+              "productCost": 193,
+              "marketPrice": 2099,
+              "durationMinutes": null
+            },
+            {
+              "name": "Korean pedicure Rituals - With Heel",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Korean pedicure Rituals - Without Heel",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": null
+            },
+            {
+              "name": "Crystal Pedicure - With Heel",
+              "brand": "Richelon",
+              "productCost": 200,
+              "marketPrice": 2199,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Crystal Pedicure - Without Heel",
+              "brand": "Richelon",
+              "productCost": 200,
+              "marketPrice": 1599,
+              "durationMinutes": null
+            }
+          ]
+        },
+        {
+          "category": "Manicure",
+          "items": [
+            {
+              "name": "Cream Delight manicure",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 80
+            },
+            {
+              "name": "O3+ manicure",
+              "brand": null,
+              "productCost": 290,
+              "marketPrice": 1899,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Korean Manicure Rituals",
+              "brand": null,
+              "productCost": null,
+              "marketPrice": null,
+              "durationMinutes": 80
+            },
+            {
+              "name": "Crystal Manicure",
+              "brand": null,
+              "productCost": 200,
+              "marketPrice": 1799,
+              "durationMinutes": 80
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

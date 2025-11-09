@@ -1,0 +1,68 @@
+/* Hide scrollbars globally */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Bottom navigation safe area padding for mobile */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Mobile bottom nav spacing - CRITICAL: Always maintain space for fixed bottom nav */
+@media (max-width: 768px) {
+  html {
+    /* Ensure no scroll issues */
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  body {
+    /* Always maintain padding for fixed bottom nav - NEVER remove this */
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+    margin-bottom: 0 !important;
+    min-height: 100vh;
+    min-height: -webkit-fill-available; /* iOS Safari fix */
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  /* Ensure main content doesn't overlap */
+  #root {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    /* padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); */
+    position: relative;
+  }
+  
+  /* Ensure bottom nav is always on top - highest z-index */
+  nav[class*="fixed bottom-0"] {
+    z-index: 9999 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Prevent layout shifts - ensure content doesn't jump */
+  main, section, article, div[class*="container"], div[class*="content"] {
+    position: relative;
+  }
+}
+
+/* Prevent any overlay or modal from covering bottom nav */
+@media (max-width: 768px) {
+  [data-radix-portal],
+  [role="dialog"],
+  [role="alertdialog"] {
+    z-index: 10000 !important; /* Higher than nav, but nav should still be visible when needed */
+  }
+}
