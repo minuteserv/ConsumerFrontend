@@ -415,6 +415,9 @@ export function Footer({ className = '' }) {
             <p style={{ margin: '4px 0' }}>
               © Copyright {currentYear} {COMPANY_INFO.name} Limited All rights reserved. | CIN: L74140DL2014PLC274413
             </p>
+            <p style={{ margin: '4px 0' }}>
+              Managed by Zingcab
+            </p>
           </div>
         </div>
       </div>
