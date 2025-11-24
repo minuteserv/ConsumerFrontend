@@ -15,20 +15,24 @@ import {
 import { Star, ArrowLeft, Clock, Tag, Package, CheckCircle2 } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useServices } from '../hooks/useServices';
+import { useAuth } from '../contexts/AuthContext';
+import { LoginModal } from '../components/LoginModal';
+import { ShareButton } from '../components/ShareButton';
+
+// Safe analytics import - uses loader that handles blocked imports gracefully
+import { trackServiceViewed, trackAddToCart } from '../lib/analytics-loader';
 
 export function ServiceDetail() {
   // ALL HOOKS MUST BE CALLED FIRST - before any conditional returns
   const { serviceId } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
+  const { isAuthenticated } = useAuth();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const { services: servicesData, loading: servicesLoading, error: servicesError } = useServices();
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [serviceId]);
-
-  // Find the service from the services data (MUST be before conditional returns)
+  // Find the service from the services data (MUST be before useEffect hooks that use it)
   const service = useMemo(() => {
     if (!servicesData?.tiers || !serviceId) return null;
     
@@ -51,6 +55,90 @@ export function ServiceDetail() {
     }
     return null;
   }, [servicesData, serviceId]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [serviceId]);
+
+  // Update Open Graph meta tags for social sharing (WhatsApp preview)
+  useEffect(() => {
+    if (!service) return;
+
+    const baseUrl = window.location.origin;
+    const serviceUrl = `${baseUrl}/service/${serviceId}`;
+    const serviceName = service.name || 'Service';
+    const price = service.productCost || service.marketPrice || service.price || '';
+    const description = `Book ${serviceName}${price ? ` for just ₹${price}` : ''} at Minuteserv. Get salon-quality service at your doorstep!`;
+    
+    // Ensure image URL is absolute (required for WhatsApp preview)
+    let imageUrl = service.image || `${baseUrl}/favicon.svg`;
+    if (imageUrl && !imageUrl.startsWith('http')) {
+      // If relative URL, make it absolute
+      if (imageUrl.startsWith('/')) {
+        imageUrl = `${baseUrl}${imageUrl}`;
+      } else {
+        imageUrl = `${baseUrl}/${imageUrl}`;
+      }
+    }
+
+    // Update or create Open Graph meta tags
+    const updateMetaTag = (property, content) => {
+      let meta = document.querySelector(`meta[property="${property}"]`) || 
+                 document.querySelector(`meta[name="${property}"]`);
+      
+      if (!meta) {
+        meta = document.createElement('meta');
+        // Use 'property' for og: tags, 'name' for twitter: tags
+        if (property.startsWith('og:')) {
+          meta.setAttribute('property', property);
+        } else {
+          meta.setAttribute('name', property);
+        }
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+
+    // Update title
+    document.title = `${serviceName} - Minuteserv`;
+
+    // Open Graph tags for WhatsApp/Facebook
+    updateMetaTag('og:title', serviceName);
+    updateMetaTag('og:description', description);
+    updateMetaTag('og:image', imageUrl);
+    updateMetaTag('og:url', serviceUrl);
+    updateMetaTag('og:type', 'website');
+    updateMetaTag('og:image:width', '1200');
+    updateMetaTag('og:image:height', '630');
+
+    // Twitter Card tags
+    updateMetaTag('twitter:card', 'summary_large_image');
+    updateMetaTag('twitter:title', serviceName);
+    updateMetaTag('twitter:description', description);
+    updateMetaTag('twitter:image', imageUrl);
+
+    // Cleanup function to restore default meta tags
+    return () => {
+      document.title = 'Minuteserv - Beauty Parlor Booking';
+      // Optionally restore default meta tags
+    };
+  }, [service, serviceId]);
+
+  // Track service viewed event
+  useEffect(() => {
+    try {
+      console.log('[ServiceDetail] Service loaded, attempting to track view');
+      if (service) {
+        if (typeof trackServiceViewed === 'function') {
+          trackServiceViewed(service);
+        } else {
+          console.warn('[ServiceDetail] trackServiceViewed not available');
+        }
+      }
+    } catch (error) {
+      console.error('[ServiceDetail] Error in service_viewed tracking (non-blocking):', error);
+    }
+  }, [service]);
 
   // Handle loading state (AFTER all hooks)
   if (servicesLoading) {
@@ -116,17 +204,37 @@ export function ServiceDetail() {
   const duration = service.durationMinutes ? `${service.durationMinutes} minutes` : 'Not specified';
 
   const handleAddToCart = () => {
-    const serviceWithMeta = {
-      ...service,
-      id: service.id, // Ensure ID is included (from API or generated)
-      category: service.category,
-      tier: service.tier,
-    };
-    addToCart(serviceWithMeta);
-    setShowSuccessModal(true);
+    try {
+      const serviceWithMeta = {
+        ...service,
+        id: service.id, // Ensure ID is included (from API or generated)
+        category: service.category,
+        tier: service.tier,
+      };
+      addToCart(serviceWithMeta);
+      // Track add to cart event
+      console.log('[ServiceDetail] Attempting to track add_to_cart');
+      if (typeof trackAddToCart === 'function') {
+        trackAddToCart(serviceWithMeta, serviceWithMeta.quantity || 1);
+      } else {
+        console.warn('[ServiceDetail] trackAddToCart not available');
+      }
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error('[ServiceDetail] Error in add_to_cart (non-blocking):', error);
+      // Still show modal even if tracking fails
+      setShowSuccessModal(true);
+    }
   };
 
   const handleBookNow = () => {
+    // CRITICAL SECURITY: Verify authentication before allowing checkout
+    if (!isAuthenticated) {
+      console.warn('[ServiceDetail] ⚠️ CRITICAL: Unauthenticated checkout attempt - showing login modal');
+      setShowLoginModal(true);
+      return;
+    }
+    // User is authenticated - proceed with booking
     handleAddToCart();
     navigate('/checkout');
   };
@@ -181,10 +289,20 @@ export function ServiceDetail() {
                 <span className="break-words">{service.category}</span>
               </div>
 
-              {/* Service Name */}
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-3 md:mb-4 mt-0 leading-tight break-words">
-                {service.name}
-              </h1>
+              {/* Service Name with Share Button */}
+              <div className="flex items-start justify-between gap-4 mb-3 md:mb-4">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mt-0 leading-tight break-words flex-1">
+                  {service.name}
+                </h1>
+                <ShareButton 
+                  service={service} 
+                  tier={service.tier} 
+                  category={service.category}
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0"
+                />
+              </div>
 
               {/* Brand */}
               {service.brand && (
@@ -369,6 +487,12 @@ export function ServiceDetail() {
             <Button
               onClick={() => {
                 setShowSuccessModal(false);
+                // CRITICAL SECURITY: Verify authentication before allowing checkout
+                if (!isAuthenticated) {
+                  console.warn('[ServiceDetail] ⚠️ CRITICAL: Unauthenticated checkout attempt - showing login modal');
+                  setShowLoginModal(true);
+                  return;
+                }
                 navigate('/checkout');
               }}
               className="w-full sm:w-auto bg-primary text-white min-h-[44px]"
@@ -378,6 +502,26 @@ export function ServiceDetail() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Login Modal - shown when user tries to checkout without authentication */}
+      <LoginModal
+        open={showLoginModal}
+        onOpenChange={(open) => {
+          setShowLoginModal(open);
+          if (!open && !isAuthenticated) {
+            // If user closes modal without logging in, stay on service page
+            console.warn('[ServiceDetail] User closed login modal without authenticating');
+          }
+        }}
+        onSuccess={() => {
+          // After successful login, user can proceed to checkout
+          setShowLoginModal(false);
+          // Optionally navigate to checkout after login
+          if (cart.length > 0) {
+            navigate('/checkout');
+          }
+        }}
+      />
     </div>
   );
 }

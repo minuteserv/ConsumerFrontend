@@ -42,10 +42,25 @@ export function Cart() {
     getTotalPrice,
     getTotalItems,
   } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const [showDeleteDialog, setShowDeleteDialog] = useState(null);
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  // CRITICAL SECURITY: Authentication guard - redirect if not authenticated
+  // This prevents direct URL access to /cart without authentication
+  useEffect(() => {
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        console.error('[Cart] ⚠️ CRITICAL SECURITY: Unauthenticated access attempt blocked');
+        console.error('[Cart] Redirecting to home - authentication required for cart');
+        // Redirect to home if not authenticated
+        navigate('/', { replace: true });
+        return;
+      }
+      console.log('[Cart] ✓ Security check passed - user authenticated');
+    }
+  }, [isAuthenticated, isLoading, navigate]);
 
   const rawTotalPrice = getTotalPrice();
   const totalItems = getTotalItems();
@@ -92,14 +107,18 @@ export function Cart() {
     setShowClearDialog(false);
   };
 
-  // Show login modal if not authenticated and cart has items (like checkout)
+  // CRITICAL SECURITY: Show login modal if not authenticated and cart has items
+  // This ensures users cannot proceed without authentication
   useEffect(() => {
-    if (cart.length > 0 && !isAuthenticated) {
-      setShowLoginModal(true);
-    } else {
-      setShowLoginModal(false);
+    if (!isLoading) {
+      if (cart.length > 0 && !isAuthenticated) {
+        console.warn('[Cart] ⚠️ Cart has items but user not authenticated - showing login modal');
+        setShowLoginModal(true);
+      } else if (isAuthenticated) {
+        setShowLoginModal(false);
+      }
     }
-  }, [cart.length, isAuthenticated]);
+  }, [cart.length, isAuthenticated, isLoading]);
 
   // Handle login success
   const handleLoginSuccess = () => {
@@ -453,7 +472,16 @@ export function Cart() {
 
                 {/* Proceed to Checkout Button */}
                 <Button
-                  onClick={() => navigate("/checkout")}
+                  onClick={() => {
+                    // CRITICAL SECURITY: Verify authentication before allowing checkout
+                    if (!isAuthenticated) {
+                      console.warn('[Cart] ⚠️ Unauthenticated checkout attempt - showing login modal');
+                      setShowLoginModal(true);
+                      return;
+                    }
+                    // Only navigate if authenticated
+                    navigate("/checkout");
+                  }}
                   className="w-full bg-primary text-white py-3.5 px-6 text-base font-semibold border-none rounded-lg cursor-pointer mb-3 hover:bg-primary/90 transition-colors"
                 >
                   Proceed to Checkout

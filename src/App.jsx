@@ -17,6 +17,7 @@ import { CartSummary } from './components/CartSummary';
 import { BottomNav } from './components/BottomNav';
 import { Footer } from './components/Footer';
 import { LocationAutoDetect } from './components/LocationAutoDetect';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import './App.css';
 import { ScrollToTop } from './components/ScrollToTop';
 
@@ -35,9 +36,32 @@ function AppContent() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/bookings" element={<Bookings />} />
+        {/* Protected Routes - Require Authentication */}
+        <Route 
+          path="/cart" 
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <Cart />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/checkout" 
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <Checkout />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/bookings" 
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <Bookings />
+            </ProtectedRoute>
+          } 
+        />
+        {/* Public Routes */}
         <Route path="/contact" element={<Contact />} />
         <Route path="/contact-us" element={<Contact />} />
         <Route path="/services" element={<Services />} />

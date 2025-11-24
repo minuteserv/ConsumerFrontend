@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Dialog,
@@ -12,12 +13,15 @@ import {
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { calculateTaxFee } from '@/lib/utils';
+import { LoginModal } from './LoginModal';
 
 export function CartSummary() {
   const { getTotalItems, getTotalPrice, clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [showClearDialog, setShowClearDialog] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const totalItems = getTotalItems();
   const rawTotalPrice = getTotalPrice();
   const totalPrice = Math.floor(rawTotalPrice * 100) / 100;
@@ -62,7 +66,15 @@ export function CartSummary() {
                 Clear
               </button>
               <button
-                onClick={() => navigate('/cart')}
+                onClick={() => {
+                  // CRITICAL SECURITY: Verify authentication before allowing cart access
+                  if (!isAuthenticated) {
+                    console.warn('[CartSummary] ⚠️ CRITICAL: Unauthenticated cart access attempt - showing login modal');
+                    setShowLoginModal(true);
+                    return;
+                  }
+                  navigate('/cart');
+                }}
                 className="px-5 py-2.5 bg-white text-primary border-none rounded-lg cursor-pointer text-sm font-medium transition-all duration-200 whitespace-nowrap hover:bg-gray-100"
               >
                 View Cart
@@ -127,6 +139,19 @@ export function CartSummary() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Login Modal - shown when user tries to access cart without authentication */}
+      <LoginModal
+        open={showLoginModal}
+        onOpenChange={(open) => {
+          setShowLoginModal(open);
+        }}
+        onSuccess={() => {
+          // After successful login, user can access cart
+          setShowLoginModal(false);
+          navigate('/cart');
+        }}
+      />
     </>
   );
 }

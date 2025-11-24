@@ -70,6 +70,9 @@ import { LoginModal } from "../components/LoginModal";
 import { bookingAPI, saveAddress, validatePromoCodeAPI } from "../lib/api";
 import { COMPANY_INFO, RAZORPAY_CONFIG } from "../lib/constants";
 import { paymentService, generateReceiptId } from "../lib/payment";
+
+// Safe analytics import - uses loader that handles blocked imports gracefully
+import { trackBeginCheckout, trackAddPaymentInfo, trackPurchase, trackPaymentFailed } from "../lib/analytics-loader";
 import {
   Calendar,
   Clock,
@@ -96,9 +99,33 @@ export function Checkout() {
   const navigate = useNavigate();
   const { cart, updateQuantity, removeFromCart, getTotalPrice, clearCart } =
     useCart();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isLoading } = useAuth();
   const { currentLocation, setLocation, addSavedLocation } = useLocation(); // Get location functions from context
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  // CRITICAL SECURITY: Authentication guard - redirect if not authenticated
+  // This prevents direct URL access to /checkout without authentication
+  useEffect(() => {
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        console.error('[Checkout] ⚠️ CRITICAL SECURITY: Unauthenticated access attempt blocked');
+        console.error('[Checkout] Redirecting to home - authentication required for checkout');
+        // Clear cart and redirect to home if not authenticated
+        clearCart();
+        navigate('/', { replace: true });
+        return;
+      }
+      
+      // Additional security: If cart is empty, redirect to home
+      if (cart.length === 0) {
+        console.warn('[Checkout] Cart is empty - redirecting to home');
+        navigate('/', { replace: true });
+        return;
+      }
+      
+      console.log('[Checkout] ✓ Security check passed - user authenticated and cart has items');
+    }
+  }, [isAuthenticated, isLoading, navigate, clearCart, cart.length]);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -238,12 +265,20 @@ export function Checkout() {
     }
   }, [currentLocation]);
   
-  // Check authentication when cart has items
+  // CRITICAL SECURITY: Check authentication when cart has items
+  // This is a secondary guard in addition to route protection
   useEffect(() => {
-    if (cart.length > 0 && !isAuthenticated) {
-      setShowLoginModal(true);
+    if (!isLoading) {
+      if (cart.length > 0 && !isAuthenticated) {
+        console.warn('[Checkout] ⚠️ CRITICAL: Cart has items but user not authenticated');
+        setShowLoginModal(true);
+      } else if (!isAuthenticated) {
+        // If no cart items and not authenticated, redirect
+        console.warn('[Checkout] ⚠️ CRITICAL: No cart items and not authenticated - redirecting');
+        navigate('/', { replace: true });
+      }
     }
-  }, [cart.length, isAuthenticated]);
+  }, [cart.length, isAuthenticated, isLoading, navigate]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
@@ -301,6 +336,41 @@ export function Checkout() {
       setExpandedMobileSection("customer");
     }
   }, [currentStep, isMobile]);
+
+  // Track begin_checkout event when user enters checkout page
+  useEffect(() => {
+    try {
+      console.log('[Checkout] Component mounted, cart length:', cart.length);
+      if (cart.length > 0) {
+        const totalValue = getTotalPrice();
+        console.log('[Checkout] Attempting to track begin_checkout, totalValue:', totalValue);
+        if (typeof trackBeginCheckout === 'function') {
+          trackBeginCheckout(cart, totalValue);
+        } else {
+          console.warn('[Checkout] trackBeginCheckout not available');
+        }
+      }
+    } catch (error) {
+      console.error('[Checkout] Error in begin_checkout tracking (non-blocking):', error);
+    }
+  }, []); // Only track once on mount
+
+  // Track add_payment_info when payment method is selected
+  useEffect(() => {
+    try {
+      if (paymentMethod && (paymentMethod === "card" || paymentMethod === "online") && cart.length > 0) {
+        const totalValue = grandTotal || finalPrice || getTotalPrice();
+        console.log('[Checkout] Attempting to track add_payment_info, method:', paymentMethod);
+        if (typeof trackAddPaymentInfo === 'function') {
+          trackAddPaymentInfo(paymentMethod, totalValue);
+        } else {
+          console.warn('[Checkout] trackAddPaymentInfo not available');
+        }
+      }
+    } catch (error) {
+      console.error('[Checkout] Error in add_payment_info tracking (non-blocking):', error);
+    }
+  }, [paymentMethod, cart.length]); // Track when payment method changes
 
   // Generate next 14 days for date selection
   const dates = [];
@@ -442,6 +512,26 @@ export function Checkout() {
 
       // If booking was already created (flow: booking first, then payment), we're done
       if (verificationResult.booking) {
+        // Track purchase event
+        try {
+          console.log('[Checkout] Attempting to track purchase (online, booking exists)');
+          if (typeof trackPurchase === 'function') {
+            trackPurchase({
+              bookingId: verificationResult.booking.id,
+              services: cart,
+              totalPrice: grandTotal || finalPrice || getTotalPrice(),
+              paymentMethod: "online",
+              paymentId: paymentResponse.razorpay_payment_id,
+              promoCode: appliedPromo,
+              customerPhone: customerPhone
+            });
+          } else {
+            console.warn('[Checkout] trackPurchase not available');
+          }
+        } catch (error) {
+          console.error('[Checkout] Error tracking purchase (non-blocking):', error);
+        }
+        
         clearCart();
         setShowPaymentSuccessModal(true);
         setTimeout(() => {
@@ -480,6 +570,27 @@ export function Checkout() {
       };
 
       await bookingAPI(bookingData);
+      
+      // Track purchase event
+      try {
+        console.log('[Checkout] Attempting to track purchase (online, legacy flow)');
+        if (typeof trackPurchase === 'function') {
+          trackPurchase({
+            bookingId: bookingData.receiptId,
+            services: cart,
+            totalPrice: grandTotal || finalPrice || getTotalPrice(),
+            paymentMethod: "online",
+            paymentId: paymentResponse.razorpay_payment_id,
+            promoCode: appliedPromo,
+            customerPhone: customerPhone
+          });
+        } else {
+          console.warn('[Checkout] trackPurchase not available');
+        }
+      } catch (error) {
+        console.error('[Checkout] Error tracking purchase (non-blocking):', error);
+      }
+      
       clearCart();
       setShowPaymentSuccessModal(true);
 
@@ -510,6 +621,20 @@ export function Checkout() {
    */
   const handlePaymentFailure = (error) => {
     console.error("Payment failure:", error);
+    
+    // Track payment failed event
+    try {
+      const amount = grandTotal || finalPrice || getTotalPrice();
+      console.log('[Checkout] Attempting to track payment_failed');
+      if (typeof trackPaymentFailed === 'function') {
+        trackPaymentFailed(error, amount);
+      } else {
+        console.warn('[Checkout] trackPaymentFailed not available');
+      }
+    } catch (trackingError) {
+      console.error('[Checkout] Error tracking payment failure (non-blocking):', trackingError);
+    }
+    
     setPaymentError(
       error.error?.description ||
         "Payment failed. Please try again or use cash payment."
@@ -545,6 +670,14 @@ export function Checkout() {
    * Creates booking first, then uses backend Razorpay order
    */
   const handleRazorpayPayment = async () => {
+    // CRITICAL SECURITY: Verify authentication before allowing payment
+    if (!isAuthenticated) {
+      console.error('[Checkout] ⚠️ CRITICAL SECURITY: Unauthenticated payment attempt blocked');
+      setShowLoginModal(true);
+      setCurrentStep(1);
+      return;
+    }
+
     if (!validateStep1()) {
       setCurrentStep(1);
       return;
@@ -651,6 +784,14 @@ export function Checkout() {
    * Handle cash payment booking - Backend Integrated
    */
   const handleCashPaymentBooking = async () => {
+    // CRITICAL SECURITY: Verify authentication before allowing booking
+    if (!isAuthenticated) {
+      console.error('[Checkout] ⚠️ CRITICAL SECURITY: Unauthenticated booking attempt blocked');
+      setShowLoginModal(true);
+      setCurrentStep(1);
+      return;
+    }
+
     if (!validateStep1()) {
       setCurrentStep(1);
       return;
@@ -695,7 +836,28 @@ export function Checkout() {
         cancellation_policy_accepted: true,
       };
 
-      await bookingAPI(bookingData);
+      const bookingResult = await bookingAPI(bookingData);
+      
+      // Track purchase event for cash payment
+      try {
+        console.log('[Checkout] Attempting to track purchase (cash)');
+        if (typeof trackPurchase === 'function') {
+          trackPurchase({
+            bookingId: bookingResult?.bookingId || bookingData.receiptId,
+            services: cart,
+            totalPrice: grandTotal || finalPrice || getTotalPrice(),
+            paymentMethod: "cash",
+            paymentId: null,
+            promoCode: appliedPromo,
+            customerPhone: customerPhone
+          });
+        } else {
+          console.warn('[Checkout] trackPurchase not available');
+        }
+      } catch (error) {
+        console.error('[Checkout] Error tracking purchase (non-blocking):', error);
+      }
+      
       clearCart();
       navigate("/bookings", { state: { bookingSuccess: true } });
     } catch (error) {
@@ -709,6 +871,14 @@ export function Checkout() {
    * Main booking handler - routes based on payment method
    */
   const handleBooking = async () => {
+    // CRITICAL SECURITY: Verify authentication before allowing any booking
+    if (!isAuthenticated) {
+      console.error('[Checkout] ⚠️ CRITICAL SECURITY: Unauthenticated booking attempt blocked');
+      setShowLoginModal(true);
+      setCurrentStep(1);
+      return;
+    }
+
     if (paymentMethod === "card") {
       // Online payment - use Razorpay
       await handleRazorpayPayment();

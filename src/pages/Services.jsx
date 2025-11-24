@@ -764,7 +764,7 @@ export function Services() {
               </div>
 
               {/* View Toggle - Hidden on mobile, shown on desktop */}
-              <div className="hidden md:flex items-center gap-2 border border-gray-300 rounded-md p-1">
+              <div className="hidden items-center gap-2 border border-gray-300 rounded-md p-1">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-1.5 md:p-2 rounded transition-colors ${

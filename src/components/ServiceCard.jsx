@@ -4,6 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Check } from 'lucide-react';
+import { ShareButtonIcon } from './ShareButton';
+
+// Safe analytics import - uses loader that handles blocked imports gracefully
+import { trackAddToCart } from '../lib/analytics-loader';
 
 export function ServiceCard({ service, category, tier, onSelect }) {
   const navigate = useNavigate();
@@ -38,14 +42,34 @@ export function ServiceCard({ service, category, tier, onSelect }) {
 
   const handleSelect = (e) => {
     e.stopPropagation(); // Prevent card click
-    const serviceWithMeta = {
-      ...service,
-      id: service.id, // Ensure ID is included (from API or generated)
-      category,
-      tier,
-    };
-    addToCart(serviceWithMeta);
-    if (onSelect) onSelect();
+    try {
+      const serviceWithMeta = {
+        ...service,
+        id: service.id, // Ensure ID is included (from API or generated)
+        category,
+        tier,
+      };
+      addToCart(serviceWithMeta);
+      // Track add to cart event
+      console.log('[ServiceCard] Attempting to track add_to_cart');
+      if (typeof trackAddToCart === 'function') {
+        trackAddToCart(serviceWithMeta, 1);
+      } else {
+        console.warn('[ServiceCard] trackAddToCart not available');
+      }
+      if (onSelect) onSelect();
+    } catch (error) {
+      console.error('[ServiceCard] Error in handleSelect (non-blocking):', error);
+      // Still add to cart even if tracking fails
+      const serviceWithMeta = {
+        ...service,
+        id: service.id,
+        category,
+        tier,
+      };
+      addToCart(serviceWithMeta);
+      if (onSelect) onSelect();
+    }
   };
 
   return (
@@ -89,9 +113,17 @@ export function ServiceCard({ service, category, tier, onSelect }) {
       </div>
       <CardContent className="p-4">
         <div className="mb-2">
-          <h3 className="font-semibold text-foreground text-base md:text-lg mb-1 line-clamp-1">
-            {service.name}
-          </h3>
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h3 className="font-semibold text-foreground text-base md:text-lg line-clamp-1 flex-1">
+              {service.name}
+            </h3>
+            <ShareButtonIcon 
+              service={service} 
+              tier={tier} 
+              category={category}
+              className="shrink-0"
+            />
+          </div>
           {service.brand && (
             <p className="text-sm text-muted-foreground mb-2">{service.brand}</p>
           )}
