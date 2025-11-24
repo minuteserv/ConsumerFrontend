@@ -16,11 +16,12 @@ export function Services() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTier, setSelectedTier] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [comingSoonCategory, setComingSoonCategory] = useState(null);
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [durationFilter, setDurationFilter] = useState(null);
   const [sortBy, setSortBy] = useState('popular'); // popular, price-low, price-high, duration
   const [viewMode, setViewMode] = useState('grid'); // grid or list
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [showMobileSort, setShowMobileSort] = useState(false);
 
@@ -165,56 +166,95 @@ export function Services() {
     setSelectedCategory(null);
     setPriceRange({ min: '', max: '' });
     setDurationFilter(null);
+    setComingSoonCategory(null);
+
+    if (searchParams.get('category')) {
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.delete('category');
+      setSearchParams(nextParams);
+    }
   };
 
-  const hasActiveFilters = selectedTier || selectedCategory || priceRange.min || priceRange.max || durationFilter;
+  const hasActiveFilters =
+    selectedTier ||
+    selectedCategory ||
+    priceRange.min ||
+    priceRange.max ||
+    durationFilter ||
+    comingSoonCategory;
+
+  const handleSelectedCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setComingSoonCategory(null);
+  };
 
   // Read category from URL query parameter on mount (after all hooks)
   useEffect(() => {
     const categoryParam = searchParams.get('category');
-    if (categoryParam && allCategories.length > 0) {
-      const decodedCategory = decodeURIComponent(categoryParam);
-      
-      // Try exact match first (case-insensitive)
-      const exactMatch = allCategories.find(cat => 
-        cat.toLowerCase() === decodedCategory.toLowerCase()
-      );
-      
-      if (exactMatch) {
-        setSelectedCategory(exactMatch);
-        return;
-      }
-      
-      // Try partial match
-      const partialMatch = allCategories.find(cat => {
-        const catLower = cat.toLowerCase().replace(/\s+/g, ' ');
-        const paramLower = decodedCategory.toLowerCase().replace(/\s+/g, ' ');
-        return catLower.includes(paramLower) || paramLower.includes(catLower);
-      });
-      
-      if (partialMatch) {
-        setSelectedCategory(partialMatch);
-        return;
-      }
-      
-      // Try common mappings as fallback
-      const categoryMappings = {
-        'cleanup': 'Clean up',
-        'clean up': 'Clean up',
-        'hair care': 'Head',
-        'haircare': 'Head',
-        'hair': 'Head',
-        'waxing': 'Waxing',
-        'facial': 'Facial',
-        'pedicure': 'Pedicure',
-        'manicure': 'Manicure',
-      };
-      
-      const mappedCategory = categoryMappings[decodedCategory.toLowerCase().trim()];
-      if (mappedCategory && allCategories.includes(mappedCategory)) {
-        setSelectedCategory(mappedCategory);
-      }
+
+    if (!categoryParam) {
+      setComingSoonCategory(null);
+      return;
     }
+
+    const decodedCategory = decodeURIComponent(categoryParam).trim();
+    if (!decodedCategory) {
+      setComingSoonCategory(null);
+      return;
+    }
+
+    if (allCategories.length === 0) {
+      return;
+    }
+
+    const normalizedParam = decodedCategory.toLowerCase();
+
+    const exactMatch = allCategories.find(
+      cat => cat.toLowerCase() === normalizedParam
+    );
+
+    if (exactMatch) {
+      setSelectedCategory(exactMatch);
+      setComingSoonCategory(null);
+      return;
+    }
+
+    const partialMatch = allCategories.find(cat => {
+      const catLower = cat.toLowerCase().replace(/\s+/g, ' ');
+      const paramLower = normalizedParam.replace(/\s+/g, ' ');
+      return catLower.includes(paramLower) || paramLower.includes(catLower);
+    });
+
+    if (partialMatch) {
+      setSelectedCategory(partialMatch);
+      setComingSoonCategory(null);
+      return;
+    }
+
+    const categoryMappings = {
+      'cleanup': 'Clean up',
+      'clean up': 'Clean up',
+      'hair care': 'Head',
+      'haircare': 'Head',
+      'hair': 'Head',
+      'waxing': 'Waxing',
+      'facial': 'Facial',
+      'pedicure': 'Pedicure',
+      'manicure': 'Manicure',
+      'add on facial': 'ADD On Facial',
+      'addon facial': 'ADD On Facial',
+      'hair colour': 'Hair Colour',
+    };
+
+    const mappedCategory = categoryMappings[normalizedParam];
+    if (mappedCategory && allCategories.includes(mappedCategory)) {
+      setSelectedCategory(mappedCategory);
+      setComingSoonCategory(null);
+      return;
+    }
+
+    setSelectedCategory(null);
+    setComingSoonCategory(decodedCategory);
   }, [searchParams, allCategories]);
 
   // Handle loading state (AFTER all hooks)
@@ -306,159 +346,172 @@ export function Services() {
           </div>
         </div>
 
-        <div className={`grid gap-4 md:gap-8 items-start ${
-          showFilters ? 'lg:grid-cols-[280px_1fr]' : 'grid-cols-1'
-        }`}>
-          {/* Sidebar Filters (Desktop) - Hidden on mobile */}
-          <div className={`hidden lg:block ${
-            showFilters ? '' : 'lg:hidden'
-          } sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto pr-4`}>
-            <div className="bg-white border border-gray-300 rounded-lg p-4 md:p-6">
-              <div className="flex items-center justify-between mb-4 md:mb-6">
-                <h3 className="text-base md:text-lg font-semibold text-gray-900 m-0 flex items-center gap-2">
-                  <SlidersHorizontal size={18} />
-                  Filters
-                </h3>
-                {hasActiveFilters && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearFilters}
-                    className="text-xs px-2 py-1 h-auto"
-                  >
-                    Clear
-                  </Button>
-                )}
-              </div>
+        <div className="relative">
+          {/* Desktop Floating Filters */}
+          {showFilters && (
+            <>
+              <div
+                className="hidden lg:block fixed inset-0 bg-black/10 z-30"
+                onClick={() => setShowFilters(false)}
+              />
+              <div
+                className="hidden lg:flex flex-col z-40 bg-white border border-gray-200 rounded-2xl shadow-2xl w-[360px]"
+                style={{
+                  top: '120px',
+                  left: 'max(24px, calc((100vw - 1232px) / 2 + 24px))',
+                  maxHeight: 'calc(100vh - 160px)',
+                  position: 'fixed'
+                }}
+              >
+                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+                  <div className="flex items-center gap-2 text-gray-900 text-lg font-semibold">
+                    <SlidersHorizontal size={18} />
+                    Filters
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {hasActiveFilters && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={clearFilters}
+                        className="text-xs px-2 py-1 h-auto text-primary"
+                      >
+                        Clear All
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setShowFilters(false)}
+                      className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex-1 overflow-y-auto px-5 py-6 space-y-6">
+                  {/* Tier Filter */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-900 mb-3 mt-0">Service Tier</h4>
+                    <div className="flex flex-col gap-2">
+                      <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
+                        <input
+                          type="radio"
+                          name="tier-desktop"
+                          checked={selectedTier === null}
+                          onChange={() => setSelectedTier(null)}
+                          className="cursor-pointer"
+                        />
+                        <span>All Tiers</span>
+                      </label>
+                      {tiers.map(tier => (
+                        <label key={tier} className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
+                          <input
+                            type="radio"
+                            name="tier-desktop"
+                            checked={selectedTier === tier}
+                            onChange={() => setSelectedTier(tier)}
+                            className="cursor-pointer"
+                          />
+                          <span>{tier}</span>
+                          <span className="text-[11px] leading-[14px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full font-medium min-w-[24px] text-center inline-block">
+                            {allServices.filter(s => s.tier === tier).length}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
 
-              {/* Tier Filter */}
-              <div className="mb-6 md:mb-8">
-                <h4 className="text-sm md:text-base font-semibold text-gray-900 mb-3 mt-0">
-                  Service Tier
-                </h4>
-                <div className="flex flex-col gap-2">
-                  <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
-                    <input
-                      type="radio"
-                      name="tier"
-                      checked={selectedTier === null}
-                      onChange={() => setSelectedTier(null)}
-                      className="cursor-pointer"
-                    />
-                    <span>All Tiers</span>
-                  </label>
-                  {tiers.map(tier => (
-                    <label key={tier} className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
-                      <input
-                        type="radio"
-                        name="tier"
-                        checked={selectedTier === tier}
-                        onChange={() => setSelectedTier(tier)}
-                        className="cursor-pointer"
+                  <Separator />
+
+                  {/* Category Filter */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-900 mb-3 mt-0">Category</h4>
+                    <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto pr-1">
+                      <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
+                        <input
+                          type="radio"
+                          name="category-desktop"
+                          checked={selectedCategory === null}
+                          onChange={() => handleSelectedCategoryChange(null)}
+                          className="cursor-pointer"
+                        />
+                        <span>All Categories</span>
+                      </label>
+                      {availableCategories.map(category => (
+                        <label key={category} className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
+                          <input
+                            type="radio"
+                            name="category-desktop"
+                            checked={selectedCategory === category}
+                            onChange={() => handleSelectedCategoryChange(category)}
+                            className="cursor-pointer"
+                          />
+                          <span>{category}</span>
+                          <span className="text-[11px] leading-[14px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full font-medium min-w-[24px] text-center inline-block">
+                            {filteredServices.filter(s => s.category === category).length}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Price Filter */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-900 mb-3 mt-0">Price Range</h4>
+                    <div className="flex gap-2 mb-2">
+                      <Input
+                        type="number"
+                        placeholder="Min"
+                        value={priceRange.min}
+                        onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                        className="text-sm py-2 px-3 border-gray-300 rounded-md"
                       />
-                      <span>{tier}</span>
-                      <span className="text-[11px] leading-[14px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full font-medium min-w-[24px] text-center inline-block">
-                        {allServices.filter(s => s.tier === tier).length}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <Separator className="my-4 md:my-6" />
-
-              {/* Category Filter */}
-              <div className="mb-6 md:mb-8">
-                <h4 className="text-sm md:text-base font-semibold text-gray-900 mb-3 mt-0">
-                  Category
-                </h4>
-                <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
-                  <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
-                    <input
-                      type="radio"
-                      name="category"
-                      checked={selectedCategory === null}
-                      onChange={() => setSelectedCategory(null)}
-                      className="cursor-pointer"
-                    />
-                    <span>All Categories</span>
-                  </label>
-                  {availableCategories.map(category => (
-                    <label key={category} className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
-                      <input
-                        type="radio"
-                        name="category"
-                        checked={selectedCategory === category}
-                        onChange={() => setSelectedCategory(category)}
-                        className="cursor-pointer"
+                      <Input
+                        type="number"
+                        placeholder="Max"
+                        value={priceRange.max}
+                        onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                        className="text-sm py-2 px-3 border-gray-300 rounded-md"
                       />
-                      <span>{category}</span>
-                      <span className="text-[11px] leading-[14px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full font-medium min-w-[24px] text-center inline-block">
-                        {filteredServices.filter(s => s.category === category).length}
-                      </span>
-                    </label>
-                  ))}
+                    </div>
+                    <p className="text-xs text-gray-600 m-0">
+                      ₹{priceStats.min} - ₹{priceStats.max}
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  {/* Duration Filter */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-900 mb-3 mt-0">Duration</h4>
+                    <div className="flex flex-col gap-2">
+                      {[
+                        { label: 'All', value: null },
+                        { label: 'Under 30 mins', value: '0-30' },
+                        { label: '30-45 mins', value: '30-45' },
+                        { label: '45-60 mins', value: '45-60' },
+                        { label: 'Over 60 mins', value: '60-999' }
+                      ].map(option => (
+                        <label key={option.value || 'all'} className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
+                          <input
+                            type="radio"
+                            name="duration-desktop"
+                            checked={durationFilter === option.value}
+                            onChange={() => setDurationFilter(option.value)}
+                            className="cursor-pointer"
+                          />
+                          <span>{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <Separator className="my-4 md:my-6" />
-
-              {/* Price Filter */}
-              <div className="mb-6 md:mb-8">
-                <h4 className="text-sm md:text-base font-semibold text-gray-900 mb-3 mt-0">
-                  Price Range
-                </h4>
-                <div className="flex gap-2 mb-2">
-                  <Input
-                    type="number"
-                    placeholder="Min"
-                    value={priceRange.min}
-                    onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
-                    className="text-sm py-2 px-3 border-gray-300 rounded-md"
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Max"
-                    value={priceRange.max}
-                    onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
-                    className="text-sm py-2 px-3 border-gray-300 rounded-md"
-                  />
-                </div>
-                <p className="text-xs text-gray-600 m-0">
-                  ₹{priceStats.min} - ₹{priceStats.max}
-                </p>
-              </div>
-
-              <Separator className="my-4 md:my-6" />
-
-              {/* Duration Filter */}
-              <div>
-                <h4 className="text-sm md:text-base font-semibold text-gray-900 mb-3 mt-0">
-                  Duration
-                </h4>
-                <div className="flex flex-col gap-2">
-                  {[
-                    { label: 'All', value: null },
-                    { label: 'Under 30 mins', value: '0-30' },
-                    { label: '30-45 mins', value: '30-45' },
-                    { label: '45-60 mins', value: '45-60' },
-                    { label: 'Over 60 mins', value: '60-999' }
-                  ].map(option => (
-                    <label key={option.value || 'all'} className="flex items-center gap-2 cursor-pointer text-sm text-gray-600">
-                      <input
-                        type="radio"
-                        name="duration"
-                        checked={durationFilter === option.value}
-                        onChange={() => setDurationFilter(option.value)}
-                        className="cursor-pointer"
-                      />
-                      <span>{option.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
 
           {/* Mobile Filter Dialog */}
           <Dialog open={showMobileFilters} onOpenChange={setShowMobileFilters}>
@@ -535,7 +588,7 @@ export function Services() {
                           type="radio"
                           name="category-mobile"
                           checked={selectedCategory === null}
-                          onChange={() => setSelectedCategory(null)}
+                          onChange={() => handleSelectedCategoryChange(null)}
                           className="cursor-pointer"
                         />
                         <span>All Categories</span>
@@ -546,7 +599,7 @@ export function Services() {
                             type="radio"
                             name="category-mobile"
                             checked={selectedCategory === category}
-                            onChange={() => setSelectedCategory(category)}
+                            onChange={() => handleSelectedCategoryChange(category)}
                             className="cursor-pointer"
                           />
                           <span>{category}</span>
@@ -656,13 +709,7 @@ export function Services() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => {
-                    if (window.innerWidth < 1024) {
-                      setShowMobileFilters(true);
-                    } else {
-                      setShowFilters(!showFilters);
-                    }
-                  }}
+                  onClick={() => setShowMobileFilters(true)}
                   className="lg:hidden flex items-center gap-2 border-gray-300 px-3 py-1.5 md:px-4 md:py-2"
                 >
                   <Filter size={16} />
@@ -678,7 +725,7 @@ export function Services() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setShowFilters(!showFilters)}
+                  onClick={() => setShowFilters(true)}
                   className="hidden lg:flex items-center gap-2 border-gray-300 px-3 py-1.5 md:px-4 md:py-2"
                 >
                   <Filter size={16} />
@@ -756,7 +803,7 @@ export function Services() {
                 {selectedCategory && (
                   <div
                     className="text-xs px-2.5 md:px-3 py-1 md:py-1.5 flex items-center gap-1.5 cursor-pointer bg-purple-100 text-gray-700 rounded-full font-normal border-none"
-                    onClick={() => setSelectedCategory(null)}
+                    onClick={() => handleSelectedCategoryChange(null)}
                   >
                     <span>{selectedCategory}</span>
                     <X size={14} className="text-gray-700" />
@@ -784,12 +831,14 @@ export function Services() {
             )}
 
             {/* Services Grid/List - Responsive */}
-            {filteredServices.length > 0 ? (
-              <div className={`${
-                viewMode === 'grid' 
-                  ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6' 
-                  : 'flex flex-col gap-3 md:gap-6'
-              } mb-8 md:mb-12`}>
+            {!comingSoonCategory && filteredServices.length > 0 ? (
+              <div
+                className={`${
+                  viewMode === 'grid'
+                    ? 'grid gap-3 md:gap-6 justify-center md:justify-start [grid-template-columns:repeat(auto-fill,minmax(240px,1fr))] lg:[grid-template-columns:repeat(auto-fill,minmax(326px,1fr))]'
+                    : 'flex flex-col gap-3 md:gap-6'
+                } mb-8 md:mb-12`}
+              >
                 {filteredServices.map((service, idx) => (
                   <ServiceCard
                     key={`${service.tier}-${service.category}-${idx}`}
@@ -801,17 +850,36 @@ export function Services() {
               </div>
             ) : (
               <div className="p-10 md:p-16 text-center bg-gray-100 rounded-lg">
-                <p className="text-sm md:text-lg text-gray-600 font-normal mb-4 mt-0">
-                  No services found matching your criteria.
-                </p>
-                {hasActiveFilters && (
-                  <Button
-                    onClick={clearFilters}
-                    variant="outline"
-                    className="border-primary text-primary"
-                  >
-                    Clear Filters
-                  </Button>
+                {comingSoonCategory ? (
+                  <>
+                    <p className="text-base md:text-xl text-gray-900 font-semibold mb-2 mt-0">
+                      {comingSoonCategory} services are launching soon
+                    </p>
+                    <p className="text-sm md:text-lg text-gray-600 font-normal mb-6">
+                      We&apos;re putting the finishing touches on this experience. Check back shortly or explore the services that are available today.
+                    </p>
+                    <Button
+                      onClick={clearFilters}
+                      className="bg-primary text-white px-6 md:px-8"
+                    >
+                      Browse available services
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm md:text-lg text-gray-600 font-normal mb-4 mt-0">
+                      No services found matching your criteria.
+                    </p>
+                    {hasActiveFilters && (
+                      <Button
+                        onClick={clearFilters}
+                        variant="outline"
+                        className="border-primary text-primary"
+                      >
+                        Clear Filters
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
             )}

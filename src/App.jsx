@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider } from './contexts/CartContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { LocationProvider } from './contexts/LocationContext';
@@ -20,6 +20,40 @@ import { LocationAutoDetect } from './components/LocationAutoDetect';
 import './App.css';
 import { ScrollToTop } from './components/ScrollToTop';
 
+function AppContent() {
+  const location = useLocation();
+  const isCartOrCheckout = location.pathname === '/cart' || location.pathname === '/checkout';
+  
+  // Hide footer on mobile for cart and checkout routes only
+  // For other routes (including home), show footer on both mobile and desktop
+  const footerClassName = isCartOrCheckout 
+    ? 'hidden md:block' // Hidden on mobile, shown on desktop
+    : 'block'; // Visible on both mobile and desktop for home and other routes
+
+  return (
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/bookings" element={<Bookings />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/contact-us" element={<Contact />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/service/:serviceId" element={<ServiceDetail />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/anti-discrimination-policy" element={<AntiDiscriminationPolicy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      </Routes>
+      <CartSummary />
+      <Footer className={footerClassName} />
+      <BottomNav />
+    </>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
@@ -32,24 +66,7 @@ function App() {
               v7_relativeSplatPath: true,
             }}
           >
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/bookings" element={<Bookings />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/contact-us" element={<Contact />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/service/:serviceId" element={<ServiceDetail />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/anti-discrimination-policy" element={<AntiDiscriminationPolicy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            </Routes>
-            <CartSummary />
-            <Footer className="hidden md:block" />
-            <BottomNav />
+            <AppContent />
           </Router>
         </CartProvider>
       </LocationProvider>

@@ -50,15 +50,15 @@ export function ServiceCard({ service, category, tier, onSelect }) {
 
   return (
     <Card 
-      className="overflow-hidden hover:shadow-lg transition-all duration-200 group cursor-pointer"
+      className="overflow-hidden hover:shadow-lg transition-all duration-200 group cursor-pointer md:max-w-[326px] md:w-[326px]"
       onClick={handleCardClick}
     >
-      <div className="relative h-40 md:h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden">
+      <div className="relative h-40 md:h-[160px] bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden md:mx-auto md:w-full">
         {service.image ? (
           <img
             src={service.image}
             alt={service.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover md:h-[160px] md:w-[326px] md:max-w-full"
             onError={(e) => {
               // Hide image and show placeholder if image fails to load
               e.target.style.display = 'none';
@@ -70,7 +70,7 @@ export function ServiceCard({ service, category, tier, onSelect }) {
           />
         ) : null}
         <div 
-          className="placeholder w-16 h-16 md:w-20 md:h-20 bg-primary rounded-full flex items-center justify-center"
+          className="placeholder w-16 h-16 md:w-[326px] md:h-[160px] md:rounded-none md:bg-transparent bg-primary rounded-full flex items-center justify-center border border-dashed border-primary/50"
           style={{ 
             display: service.image ? 'none' : 'flex',
             position: service.image ? 'absolute' : 'relative',

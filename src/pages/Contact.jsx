@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { contactUsAPI } from '../lib/api';
 import { COMPANY_INFO } from '../lib/constants';
-import { Phone, Mail, MapPin, Clock, MessageSquare, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, MessageCircle, MessageSquare, AlertCircle, ArrowLeft } from 'lucide-react';
 
 export function Contact() {
   const navigate = useNavigate();
@@ -62,6 +62,11 @@ export function Contact() {
     window.location.href = `mailto:${COMPANY_INFO.email}?subject=Contact Us - ${COMPANY_INFO.name}`;
   };
 
+  const handleWhatsApp = () => {
+    const whatsappNumber = (COMPANY_INFO.whatsapp || COMPANY_INFO.phone).replace(/[^\d]/g, '');
+    window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+  };
+
   const handleDirections = () => {
     const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(COMPANY_INFO.address)}`;
     window.open(url, '_blank');
@@ -93,14 +98,13 @@ export function Contact() {
       
       <div className="pt-[72px] md:pt-0" style={{ maxWidth: '1232px', width: '100%', margin: '0 auto', padding: '40px 16px' }}>
         {/* Page Title */}
-        <h1 style={{
+        <h1 className="mt-[40px] md:mt-[20px]" style={{
           fontFamily: 'system-ui, sans-serif',
           fontSize: '36px',
           lineHeight: '44px',
           color: 'rgb(15, 15, 15)',
           fontWeight: 600,
-          marginBottom: '16px',
-          marginTop: 0
+          marginBottom: '16px'
         }}>
           Contact Us
         </h1>
@@ -259,6 +263,78 @@ export function Contact() {
               }}
             >
               {COMPANY_INFO.email}
+            </a>
+          </div>
+
+          {/* WhatsApp Card */}
+          <div
+            style={{
+              padding: '24px',
+              backgroundColor: 'rgb(255, 255, 255)',
+              border: '1px solid rgb(227, 227, 227)',
+              borderRadius: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              transition: 'box-shadow 0.2s',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            onClick={handleWhatsApp}
+          >
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '8px',
+              backgroundColor: 'rgb(245, 245, 245)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '16px'
+            }}>
+              <MessageCircle size={24} color="rgb(110, 66, 229)" />
+            </div>
+            <h3 style={{
+              fontFamily: 'system-ui, sans-serif',
+              fontSize: '18px',
+              lineHeight: '26px',
+              color: 'rgb(15, 15, 15)',
+              fontWeight: 600,
+              marginBottom: '8px',
+              marginTop: 0
+            }}>
+              WhatsApp
+            </h3>
+            <p style={{
+              fontFamily: 'system-ui, sans-serif',
+              fontSize: '14px',
+              lineHeight: '20px',
+              color: 'rgb(84, 84, 84)',
+              fontWeight: 400,
+              marginBottom: '8px',
+              marginTop: 0
+            }}>
+              Chat with us on WhatsApp
+            </p>
+            <a
+              href={`https://wa.me/${(COMPANY_INFO.whatsapp || COMPANY_INFO.phone).replace(/[^\d]/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: 'system-ui, sans-serif',
+                fontSize: '16px',
+                lineHeight: '24px',
+                color: 'rgb(110, 66, 229)',
+                fontWeight: 600,
+                textDecoration: 'none'
+              }}
+            >
+              {COMPANY_INFO.whatsapp || COMPANY_INFO.phone}
             </a>
           </div>
 

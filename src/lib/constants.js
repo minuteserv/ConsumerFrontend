@@ -14,6 +14,7 @@ export const COMPANY_INFO = {
   name: 'Minuteserv',
   email: 'minuteserv1@gmail.com',
   phone: '+91 81002 30459',
+  whatsapp: '+91 81002 30459',
   address: '75/95, Ram Thakur Road, Bijoygarh, Jadavpur, Kolkata-700032',
 };
 

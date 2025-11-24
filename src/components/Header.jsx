@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Search, ShoppingCart, User, ChevronDown, TrendingUp, LogOut } from 'lucide-react';
 import { COMPANY_INFO } from '../lib/constants';
@@ -23,6 +23,7 @@ export function Header({ title, showBack = false, showSearch = true }) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const mobileOffsetClass = showSearch ? 'h-[120px]' : 'h-[72px]';
+  const userMenuRef = useRef(null);
   
   // Listen for login modal open event from BottomNav
   useEffect(() => {
@@ -34,6 +35,41 @@ export function Header({ title, showBack = false, showSearch = true }) {
       window.removeEventListener('open-login-modal', handleOpenLogin);
     };
   }, []);
+
+  // Handle clicks outside user menu dropdown (Desktop only)
+  useEffect(() => {
+    if (!showUserMenu) return;
+
+    const handleClickOutside = (e) => {
+      console.log('[DEBUG] Document click detected', e.target, e.currentTarget);
+      
+      // Check if click is inside the dropdown menu
+      if (userMenuRef.current && userMenuRef.current.contains(e.target)) {
+        console.log('[DEBUG] Click is inside dropdown, ignoring');
+        return;
+      }
+      
+      // Check if click is on the user button (to toggle menu)
+      const userButton = e.target.closest('button[data-user-menu-button="true"]');
+      if (userButton) {
+        console.log('[DEBUG] Click is on user button, ignoring (will be handled by button onClick)');
+        return;
+      }
+      
+      console.log('[DEBUG] Click is outside dropdown and user button, closing menu');
+      setShowUserMenu(false);
+    };
+
+    // Use a small delay to ensure button onClick handlers fire first
+    const timeoutId = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside, false);
+    }, 10);
+
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener('click', handleClickOutside, false);
+    };
+  }, [showUserMenu]);
   
   // Get display location text for desktop
   const getDisplayLocation = () => {
@@ -179,13 +215,25 @@ export function Header({ title, showBack = false, showSearch = true }) {
           <div className="flex items-center justify-between gap-4 lg:gap-8 py-4">
             {/* Left Section: Logo */}
             <div className="flex-shrink-0 pr-4 lg:pr-8">
-              <Link to="/" className="block">
-                <img
-                  src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_108,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/partner-training/1628575858610-5b0ae4.png"
-                  alt={`${COMPANY_INFO.name} logo`}
-                  className="h-auto w-[108px] object-contain"
-                  loading="lazy"
-                />
+              <Link 
+                to="/" 
+                className="inline-flex flex-col gap-1 group no-underline"
+                aria-label={`${COMPANY_INFO.name} home`}
+              >
+                <span
+                  className="text-[26px] leading-[26px] font-semibold text-gray-900 tracking-tight transition-transform duration-200 group-hover:-translate-y-0.5"
+                  style={{
+                    fontFamily: "'Inter', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif",
+                    letterSpacing: '-0.015em',
+                    fontSize: '24px',
+                    fontWeight: '500',
+                  }}
+                >
+                  Minute<span className="font-medium text-gray-600">serv</span>
+                </span>
+                {/* <span className="text-[11px] uppercase tracking-[0.3em] text-gray-400">
+                  beauty & wellness
+                </span> */}
               </Link>
             </div>
 
@@ -265,7 +313,13 @@ export function Header({ title, showBack = false, showSearch = true }) {
               <div className="relative">
                 {isAuthenticated ? (
                   <button
-                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    data-user-menu-button="true"
+                    onClick={(e) => {
+                      console.log('[DEBUG] User menu button clicked, current state:', showUserMenu);
+                      e.stopPropagation();
+                      setShowUserMenu(!showUserMenu);
+                      console.log('[DEBUG] User menu state set to:', !showUserMenu);
+                    }}
                     className="w-10 h-10 border-none rounded-full bg-primary flex items-center justify-center p-0"
                   >
                     <User size={20} className="text-white" />
@@ -281,7 +335,18 @@ export function Header({ title, showBack = false, showSearch = true }) {
                 
                 {/* User Dropdown Menu - Desktop */}
                 {isAuthenticated && showUserMenu && (
-                  <div className="hidden md:block absolute top-full right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[200px] z-[120] py-2 mt-1">
+                  <div 
+                    ref={userMenuRef}
+                    className="hidden md:block absolute top-full right-0 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[200px] z-[120] py-2 mt-1 pointer-events-auto"
+                    onClick={(e) => {
+                      console.log('[DEBUG] Dropdown container clicked', e.target);
+                      e.stopPropagation();
+                    }}
+                    onMouseDown={(e) => {
+                      console.log('[DEBUG] Dropdown container mousedown', e.target);
+                      e.stopPropagation();
+                    }}
+                  >
                     <div className="px-4 py-3 border-b border-gray-200">
                       <p className="text-sm font-semibold text-gray-900 mb-1 mt-0">
                         {user?.name || 'User'}
@@ -290,21 +355,47 @@ export function Header({ title, showBack = false, showSearch = true }) {
                         {user?.phoneNumber || user?.phone_number || ''}
                       </p>
                     </div>
-                    <Link to="/bookings">
-                      <button
-                        onClick={() => setShowUserMenu(false)}
-                        className="w-full px-4 py-3 border-none bg-transparent text-left cursor-pointer text-sm text-gray-900 flex items-center gap-2 hover:bg-gray-50 transition-colors"
-                      >
-                        <User size={16} />
-                        My Bookings
-                      </button>
-                    </Link>
                     <button
-                      onClick={async () => {
+                      onClick={(e) => {
+                        console.log('[DEBUG] My Bookings button clicked', e);
+                        e.preventDefault();
+                        e.stopPropagation();
                         setShowUserMenu(false);
+                        console.log('[DEBUG] Navigating to /bookings');
+                        navigate('/bookings');
+                      }}
+                      onMouseDown={(e) => {
+                        console.log('[DEBUG] My Bookings button mousedown', e);
+                        e.stopPropagation();
+                      }}
+                      onMouseUp={(e) => {
+                        console.log('[DEBUG] My Bookings button mouseup', e);
+                        e.stopPropagation();
+                      }}
+                      className="w-full px-4 py-3 border-none bg-transparent text-left cursor-pointer text-sm text-gray-900 flex items-center gap-2 hover:bg-gray-50 transition-colors"
+                    >
+                      <User size={16} />
+                      My Bookings
+                    </button>
+                    <button
+                      onClick={async (e) => {
+                        console.log('[DEBUG] Logout button clicked', e);
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowUserMenu(false);
+                        console.log('[DEBUG] Calling logout function');
                         await logout();
+                        console.log('[DEBUG] Logout complete, navigating to home');
                         // Navigate to home after logout
                         navigate('/');
+                      }}
+                      onMouseDown={(e) => {
+                        console.log('[DEBUG] Logout button mousedown', e);
+                        e.stopPropagation();
+                      }}
+                      onMouseUp={(e) => {
+                        console.log('[DEBUG] Logout button mouseup', e);
+                        e.stopPropagation();
                       }}
                       className="w-full px-4 py-3 border-none bg-transparent text-left cursor-pointer text-sm text-red-600 flex items-center gap-2 hover:bg-gray-50 transition-colors"
                     >
@@ -331,11 +422,10 @@ export function Header({ title, showBack = false, showSearch = true }) {
         onOpenChange={setShowLocationModal}
       />
       
-      {/* Overlay to close user menu */}
+      {/* Overlay to close user menu - Desktop only (visual only, clicks handled by document listener) */}
       {showUserMenu && (
         <div
-          className="fixed inset-0 z-[80]"
-          onClick={() => setShowUserMenu(false)}
+          className="hidden md:block fixed inset-0 z-[80] pointer-events-none"
         />
       )}
     </>

@@ -156,32 +156,38 @@ export function Home() {
     {
       name: 'Salon for Women',
       image: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1672324465583-2688a9.jpeg',
-      category: 'Salon'
+      category: 'Salon',
+      targetCategory: 'Clean up'
     },
     {
       name: 'Spa for Women',
       image: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1673936988512-276a19.jpeg',
-      category: 'Spa'
+      category: 'Spa',
+      targetCategory: 'Facial'
     },
     {
       name: 'Hair Studio for Women',
       image: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1728839468364-90b0dc.jpeg',
-      category: 'Head'
+      category: 'Head',
+      targetCategory: 'Head'
     },
     {
       name: 'Makeup & Styling Studio',
       image: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1669023257508-ffd582.jpeg',
-      category: 'Facial'
+      category: 'Facial',
+      targetCategory: 'ADD On Facial'
     },
     {
       name: 'Salon for Men',
       image: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1710241114433-5cfa7c.jpeg',
-      category: 'Salon'
+      category: 'Salon',
+      targetCategory: 'Clean up'
     },
     {
-      name: 'Massage for Men',
+      name: 'Massage for Women',
       image: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1674623814769-eeca92.jpeg',
-      category: 'Facial'
+      category: 'Massage',
+      targetCategory: null
     }
   ];
 
@@ -271,19 +277,14 @@ export function Home() {
   };
 
   const handleCategoryGridClick = (item) => {
-    // Map categoryGridItems to actual service categories from services.json
-    // Categories available: Clean up, Facial, Waxing, Pedicure, Manicure, Head, Hair Colour
-    const categoryMapping = {
-      'Salon': 'Clean up', // Salon services primarily include Clean up and Waxing
-      'Spa': 'Facial', // Spa services primarily include Facial treatments
-      'Head': 'Head', // Direct match - Hair services
-      'Facial': 'Facial', // Direct match
-      'Hair Colour': 'Hair Colour' // Direct match
-    };
+    if (item.targetCategory) {
+      navigate(`/services?category=${encodeURIComponent(item.targetCategory)}`);
+      return;
+    }
 
-    // Get the mapped category or use the item's category as fallback
-    const mappedCategory = categoryMapping[item.category] || item.category;
-    navigate(`/services?category=${encodeURIComponent(mappedCategory)}`);
+    const fallbackQuery = item.category || item.name;
+    // If no target category is defined, pass the most descriptive label so the services page can show a coming soon state
+    navigate(`/services?category=${encodeURIComponent(fallbackQuery || item.name)}`);
   };
 
   return (
@@ -291,7 +292,7 @@ export function Home() {
       <Header showSearch={false} />
       
       {/* Hero Section - Fully Responsive */}
-      <div className="w-full max-w-[1232px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-10">
+      <div className="w-full max-w-[1232px] mx-auto px-4 sm:px-6 md:px-8 py-3 md:py-10">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
           {/* Left Column - Responsive Width */}
           <div className="w-full lg:w-auto lg:flex-1 lg:max-w-[481px] lg:pr-8 flex-shrink-0">
@@ -301,21 +302,21 @@ export function Home() {
             </h1>
 
             {/* Spacer */}
-            <div className="h-4 md:h-6"></div>
+            <div className="h-2 md:h-6"></div>
 
             {/* What are you looking for Card */}
-            <div className="p-4 sm:p-6 md:p-8 w-full mb-0 bg-transparent rounded-none">
-              <p className="text-base sm:text-lg md:text-xl font-semibold text-gray-600 mb-4 mt-0 text-left">
+            <div className="p-2 sm:p-6 md:p-8 w-full mb-0 bg-transparent rounded-none">
+              <p className="text-base sm:text-lg md:text-xl font-semibold text-gray-600 mb-2 md:mb-4 mt-0 text-left">
                 What are you looking for?
               </p>
               
               {/* 3x2 Grid - Responsive */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4">
                 {categoryGridItems.map((item, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleCategoryGridClick(item)}
-                    className="flex flex-col items-center gap-2 p-0 border-none bg-transparent cursor-pointer transition-opacity duration-200 w-auto active:opacity-70 hover:opacity-80"
+                    className="flex flex-col items-center gap-1 md:gap-2 p-0 border-none bg-transparent cursor-pointer transition-opacity duration-200 w-auto active:opacity-70 hover:opacity-80"
                   >
                     {/* Icon Container - Responsive Size */}
                     <div 
@@ -357,7 +358,7 @@ export function Home() {
             </div>
 
             {/* Spacer */}
-            <div className="h-6 md:h-8"></div>
+            <div className="h-2 md:h-8"></div>
 
             {/* Trust Markers */}
             <div className="hidden sm:flex flex-wrap gap-4 sm:gap-6 md:gap-8 items-start">
@@ -410,7 +411,7 @@ export function Home() {
         </div>
       </div>
 
-      <div className="w-full max-w-[1232px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8">
+      <div className="w-full max-w-[1232px] mx-auto px-4 sm:px-6 md:px-8 py-2 md:py-8">
         {/* Tier Selection */}
         {/* <div className="mb-8">
           <div className="flex items-center justify-between mb-4">

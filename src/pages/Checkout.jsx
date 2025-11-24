@@ -154,11 +154,19 @@ export function Checkout() {
       console.error("Error saving address to localStorage:", error);
     }
   };
+  // Helper function to extract and format phone number from user object
+  const extractPhoneNumber = (userObj) => {
+    if (!userObj) return "";
+    // Check both phone_number (from API) and phoneNumber (camelCase variant)
+    const phone = userObj.phone_number || userObj.phoneNumber || "";
+    if (!phone) return "";
+    // Remove +91 prefix if present, and any spaces
+    return phone.replace(/^\+91/, '').replace(/\s/g, '');
+  };
+
   // Pre-fill from user data if logged in
   const [customerName, setCustomerName] = useState(user?.name || "");
-  const [customerPhone, setCustomerPhone] = useState(
-    user?.phoneNumber ? user.phoneNumber.replace('+91', '') : ""
-  );
+  const [customerPhone, setCustomerPhone] = useState(extractPhoneNumber(user));
   const [customerEmail, setCustomerEmail] = useState(user?.email || "");
   
   useEffect(() => {
@@ -171,8 +179,9 @@ export function Checkout() {
   useEffect(() => {
     if (isAuthenticated && user) {
       if (user.name) setCustomerName(user.name);
-      if (user.phoneNumber) {
-        setCustomerPhone(user.phoneNumber.replace('+91', ''));
+      const phone = extractPhoneNumber(user);
+      if (phone) {
+        setCustomerPhone(phone);
       }
       if (user.email) setCustomerEmail(user.email);
     }
@@ -766,7 +775,7 @@ export function Checkout() {
     const paymentComplete = Boolean(paymentMethod);
 
     return (
-      <div className="space-y-5 pb-32">
+      <div className="space-y-3 md:space-y-4 pb-20 md:pb-10">
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-4">
           <div className="flex items-center justify-between">
             <div>
@@ -1595,7 +1604,7 @@ export function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-32">
+    <div className="min-h-screen bg-background pb-20 md:pb-10">
       {/* Header - Desktop Only */}
       <div className="hidden md:block">
         <Header showSearch={false} />
@@ -1614,9 +1623,9 @@ export function Checkout() {
         </div>
       </div>
 
-      <div className="w-full max-w-[1232px] mx-auto px-3 sm:px-4 md:px-8 py-4 md:py-10">
+      <div className="w-full max-w-[1232px] mx-auto px-3 sm:px-4 md:px-8 py-2 md:py-6">
         {/* Progress Steps - Evenly Distributed Spacing */}
-        <div className="hidden md:flex items-center w-full mb-4 md:mb-8 pb-3 md:pb-6 border-b border-gray-200">
+        <div className="hidden md:flex items-center w-full mb-3 md:mb-6 pb-2 md:pb-4 border-b border-gray-200">
           {/* Step 1 - Equal Width */}
           <div className="flex-1 flex items-center justify-center gap-1 sm:gap-2 min-w-0">
             <div className="flex items-center gap-1 sm:gap-2 min-w-0">
@@ -1701,9 +1710,9 @@ export function Checkout() {
         </div>
 
         {/* Responsive Grid Layout */}
-        <div className="hidden md:grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 md:gap-8 items-start">
+        <div className="hidden md:grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4 md:gap-6 items-start">
           {/* Left Column - Main Content */}
-          <div className="flex flex-col gap-6 md:gap-8 w-full max-w-full lg:max-w-[738px]">
+          <div className="flex flex-col gap-4 md:gap-5 w-full max-w-full lg:max-w-[738px]">
             {/* Step 1: Booking Details */}
             {currentStep === 1 && (
               <>
@@ -1716,7 +1725,7 @@ export function Checkout() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-3 md:p-5">
-                    <div className="flex flex-col gap-3 md:gap-6">
+                    <div className="flex flex-col gap-3 md:gap-4">
                       <div>
                         <Label
                           htmlFor="customerName"
@@ -1734,7 +1743,7 @@ export function Checkout() {
                           className="text-sm md:text-base py-2 md:py-2.5 px-3 md:px-3.5 border-gray-200 rounded-md min-h-[44px]"
                         />
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         <div>
                           <Label
                             htmlFor="customerPhone"
@@ -1842,7 +1851,7 @@ export function Checkout() {
                           </div>
 
                           {/* City, State, Pincode Grid */}
-                          <div className="grid grid-cols-1 md:grid-cols-[2fr_2fr_1fr] gap-3 md:gap-6">
+                          <div className="grid grid-cols-1 md:grid-cols-[2fr_2fr_1fr] gap-3 md:gap-4">
                             {/* City */}
                             <div>
                               <Label
@@ -2022,7 +2031,7 @@ export function Checkout() {
                         </p>
                       </div>
                     ) : (
-                      <div className="flex flex-col gap-4 md:gap-6">
+                      <div className="flex flex-col gap-4 md:gap-5">
                         <div>
                           <Label className="text-xs sm:text-sm font-medium text-gray-900 mb-2 md:mb-3 flex items-center gap-1 md:gap-1.5">
                             <Calendar size={12} className="sm:w-3.5 sm:h-3.5 flex-shrink-0" />
@@ -3737,7 +3746,7 @@ export function Checkout() {
           hideClose={true}
         >
           {/* Close Button */}
-          <div className="flex justify-end p-3 sm:p-4 flex-shrink-0">
+          <div className="flex justify-end p-2 sm:p-4 flex-shrink-0">
             <button
               onClick={() => setShowCancellationPolicyModal(false)}
               className="bg-transparent border-none cursor-pointer p-1 flex items-center justify-center rounded-full w-8 h-8 hover:bg-gray-100 transition-colors"
@@ -3746,76 +3755,76 @@ export function Checkout() {
             </button>
           </div>
 
-          <div className="max-h-[calc(95vh-120px)] sm:max-h-[calc(90vh-120px)] overflow-y-auto px-4 pb-4 sm:px-6 sm:pb-6 flex-1">
+          <div className="max-h-[calc(95vh-120px)] sm:max-h-[calc(90vh-120px)] overflow-y-auto px-3 pb-3 sm:px-6 sm:pb-6 flex-1">
             {/* Title */}
-            <div className="pb-4">
-              <h3 className="text-xl sm:text-2xl md:text-[28px] leading-tight sm:leading-[40px] text-gray-900 font-bold m-0">
+            <div className="pb-2 sm:pb-4">
+              <h3 className="text-lg sm:text-2xl md:text-[28px] leading-tight sm:leading-[40px] text-gray-900 font-bold m-0">
                 Cancellation policy
               </h3>
             </div>
 
             {/* Divider */}
-            <div className="h-px bg-gray-200 mb-4" />
+            <div className="h-px bg-gray-200 mb-2 sm:mb-4" />
 
             {/* Cancellation Fee Table */}
-            <div className="mb-4">
+            <div className="mb-2 sm:mb-4">
               {/* Table Header */}
-              <div className="flex mb-2">
+              <div className="flex mb-1 sm:mb-2">
                 <div className="flex-1">
-                  <p className="text-sm sm:text-base leading-5 text-gray-900 font-semibold m-0 text-left">
+                  <p className="text-xs sm:text-base leading-4 sm:leading-5 text-gray-900 font-semibold m-0 text-left">
                     Time
                   </p>
                 </div>
-                <div className="flex-1 ml-3">
-                  <p className="text-sm sm:text-base leading-5 text-gray-900 font-semibold m-0 text-right">
+                <div className="flex-1 ml-2 sm:ml-3">
+                  <p className="text-xs sm:text-base leading-4 sm:leading-5 text-gray-900 font-semibold m-0 text-right">
                     Fee
                   </p>
                 </div>
               </div>
 
               {/* Row 1: Free */}
-              <div className="flex py-3 border-b border-dotted border-gray-200">
+              <div className="flex py-2 sm:py-3 border-b border-dotted border-gray-200">
                 <div className="flex-1">
-                  <p className="text-sm sm:text-base leading-6 text-gray-900 m-0 text-left">
+                  <p className="text-xs sm:text-base leading-5 sm:leading-6 text-gray-900 m-0 text-left">
                     Till 5 mins after the booking
                   </p>
                 </div>
-                <div className="flex-1 ml-3">
-                  <p className="text-sm sm:text-base leading-6 text-green-600 m-0 text-right">
+                <div className="flex-1 ml-2 sm:ml-3">
+                  <p className="text-xs sm:text-base leading-5 sm:leading-6 text-green-600 m-0 text-right">
                     Free
                   </p>
                 </div>
               </div>
 
               {/* Divider */}
-              <div className="h-px bg-gray-200 my-2" />
+              <div className="h-px bg-gray-200 my-1 sm:my-2" />
 
               {/* Row 2: ₹50 */}
-              <div className="flex py-3 border-b border-dotted border-gray-200">
+              <div className="flex py-2 sm:py-3 border-b border-dotted border-gray-200">
                 <div className="flex-1">
-                  <p className="text-sm sm:text-base leading-6 text-gray-900 m-0 text-left">
+                  <p className="text-xs sm:text-base leading-5 sm:leading-6 text-gray-900 m-0 text-left">
                     Within 12 hrs of the service
                   </p>
                 </div>
-                <div className="flex-1 ml-3">
-                  <p className="text-sm sm:text-base leading-6 text-gray-900 m-0 text-right">
+                <div className="flex-1 ml-2 sm:ml-3">
+                  <p className="text-xs sm:text-base leading-5 sm:leading-6 text-gray-900 m-0 text-right">
                     Up to ₹50
                   </p>
                 </div>
               </div>
 
               {/* Divider */}
-              <div className="h-px bg-gray-200 my-2" />
+              <div className="h-px bg-gray-200 my-1 sm:my-2" />
 
               {/* Row 3: ₹100 */}
-              <div className="flex py-3">
+              <div className="flex py-2 sm:py-3">
                 <div className="flex-1">
-                  <p className="text-sm sm:text-base leading-6 text-gray-900 m-0 text-left">
+                  <p className="text-xs sm:text-base leading-5 sm:leading-6 text-gray-900 m-0 text-left">
                     Within 3 hrs of the service
                   </p>
                 </div>
-                <div className="flex-1 ml-3">
-                  <p className="text-sm sm:text-base leading-6 text-gray-900 m-0 text-right">
+                <div className="flex-1 ml-2 sm:ml-3">
+                  <p className="text-xs sm:text-base leading-5 sm:leading-6 text-gray-900 m-0 text-right">
                     Up to ₹100
                   </p>
                 </div>
@@ -3823,11 +3832,11 @@ export function Checkout() {
             </div>
 
             {/* Divider */}
-            <div className="h-px bg-gray-200 my-4" />
+            <div className="h-px bg-gray-200 my-2 sm:my-4" />
 
             {/* Important Note */}
-            <div className="flex items-start gap-2.5 mb-6">
-              <div className="w-5 h-5 flex-shrink-0 mt-0.5">
+            <div className="flex items-start gap-2 sm:gap-2.5 mb-3 sm:mb-6">
+              <div className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5">
                 <svg
                   width="20"
                   height="20"
@@ -3847,27 +3856,27 @@ export function Checkout() {
                   />
                 </svg>
               </div>
-              <p className="text-sm sm:text-base leading-5 text-green-600 m-0">
+              <p className="text-xs sm:text-base leading-4 sm:leading-5 text-green-600 m-0">
                 No fee if a professional is not assigned
               </p>
             </div>
 
             {/* Divider */}
-            <div className="h-px bg-gray-200 my-4 mb-6" />
+            <div className="h-px bg-gray-200 my-2 sm:my-4 sm:mb-6" />
 
             {/* Fee Explanation */}
-            <div className="mb-6">
-              <div className="flex items-start gap-3">
+            <div className="mb-3 sm:mb-6">
+              <div className="flex items-start gap-2 sm:gap-3">
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-lg sm:text-xl leading-7 text-gray-900 font-semibold m-0 mb-2">
+                  <h4 className="text-sm sm:text-xl leading-5 sm:leading-7 text-gray-900 font-semibold m-0 mb-1 sm:mb-2">
                     This fee goes to the professional
                   </h4>
-                  <p className="text-sm sm:text-base leading-6 text-gray-600 m-0">
+                  <p className="text-xs sm:text-base leading-5 sm:leading-6 text-gray-600 m-0">
                     Their time is reserved for the service & they cannot get
                     another job for the reserved time
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded flex-shrink-0 overflow-hidden">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded flex-shrink-0 overflow-hidden">
                   <img
                     src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_48,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images-stage/growth/home-screen/1689577394216-390457.jpeg"
                     alt="Professional payment"
@@ -3878,14 +3887,14 @@ export function Checkout() {
             </div>
 
             {/* Divider */}
-            <div className="h-px bg-gray-200 mb-4" />
+            <div className="h-px bg-gray-200 mb-2 sm:mb-4" />
           </div>
 
           {/* Footer Button */}
-          <div className="bg-white p-4 border-t border-gray-200 flex-shrink-0">
+          <div className="bg-white p-3 sm:p-4 border-t border-gray-200 flex-shrink-0">
             <Button
               onClick={() => setShowCancellationPolicyModal(false)}
-              className="w-full bg-white text-primary py-3 px-6 text-sm sm:text-base font-semibold rounded-lg border-none hover:bg-gray-50 transition-colors min-h-[44px]"
+              className="w-full bg-white text-primary py-2 sm:py-3 px-6 text-xs sm:text-base font-semibold rounded-lg border-none hover:bg-gray-50 transition-colors min-h-[44px]"
             >
               Okay
             </Button>

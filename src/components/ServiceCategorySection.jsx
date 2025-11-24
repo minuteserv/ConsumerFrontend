@@ -2,9 +2,9 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 export function ServiceCategorySection({ title, subtitle, services, onServiceClick }) {
   return (
-    <div className="mt-6 mb-6 md:mt-10 md:mb-10" style={{ maxWidth: '1232px', width: '100%', margin: '45px auto', padding: '0 16px' }}>
+    <div className="mt-2 mb-2 md:mt-10 md:mb-10" style={{ maxWidth: '1232px', width: '100%', margin: '0 auto', padding: '0 16px' }}>
       {/* Heading - Exact match */}
-      <div className="mb-3 md:mb-4">
+      <div className="mb-2 md:mb-4">
         <div style={{ 
           display: 'flex',
           alignItems: 'flex-start',

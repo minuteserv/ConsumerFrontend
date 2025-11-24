@@ -190,7 +190,7 @@ export function Cart() {
 
         {/* Price Alert */}
         {savings > 0 && (
-          <div className="p-2.5 md:p-4 bg-green-50 border border-green-200 rounded-lg mb-5 md:mb-10 flex items-start gap-2 md:gap-3">
+          <div className="p-2.5 md:p-4 bg-green-50 border border-green-200 rounded-lg mb-5 md:mb-12 flex items-start gap-2 md:gap-3" style={{marginBottom:'15px'}}>
             <CheckCircle2 className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-600 flex-shrink-0" />
             <p className="text-[11px] md:text-base text-green-800 m-0 flex-1 leading-relaxed">
               You're saving ₹{formatCurrency(savings)} on this order!
@@ -199,10 +199,10 @@ export function Cart() {
         )}
 
         {/* Responsive Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 md:gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 lg:gap-16 items-start">
 
           {/* Left Column - Cart Items */}
-          <div className="flex flex-col gap-4 md:gap-6">
+          <div className="flex flex-col gap-4 md:gap-8">
             {/* Cart Header Actions - Desktop Only */}
             <div className="hidden md:flex justify-between items-center p-4 bg-white border border-gray-200 rounded-lg">
               <span className="text-sm md:text-base text-gray-600 font-medium">
@@ -244,15 +244,39 @@ export function Cart() {
               return (
                 <Card
                   key={idx}
-                  className="border border-gray-200 rounded-lg overflow-hidden"
+                  className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
                 >
                   <CardContent className="p-0">
-                    <div className="flex flex-col sm:flex-row gap-4 md:gap-6 p-4 md:p-5">
+                    <div className="flex flex-col sm:flex-row gap-4 md:gap-8 p-4 md:p-6">
                       {/* Service Icon/Image */}
-                      <div className="w-full sm:w-32 md:w-36 h-32 md:h-36 sm:flex-shrink-0 rounded-lg bg-primary flex items-center justify-center">
-                        <span className="text-4xl md:text-5xl font-bold text-white">
-                          {item.name.charAt(0)}
-                        </span>
+                      <div className="w-full sm:w-32 md:w-40 h-32 md:h-40 sm:flex-shrink-0 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden relative shadow-sm border border-gray-100">
+                        {item.image ? (
+                          <div className="w-full h-full p-2 flex items-center justify-center">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="max-w-full max-h-full object-contain"
+                              style={{
+                                objectFit: 'contain',
+                                objectPosition: 'center',
+                                width: 'auto',
+                                height: 'auto'
+                              }}
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                const placeholder = e.target.parentElement.parentElement.querySelector('.image-placeholder');
+                                if (placeholder) {
+                                  placeholder.style.display = 'flex';
+                                }
+                              }}
+                            />
+                          </div>
+                        ) : null}
+                        <div className="image-placeholder w-full h-full flex items-center justify-center bg-gradient-to-br from-primary to-primary/80" style={{ display: item.image ? 'none' : 'flex' }}>
+                          <span className="text-4xl md:text-5xl font-bold text-white">
+                            {item.name.charAt(0)}
+                          </span>
+                        </div>
                       </div>
 
                       {/* Item Details */}

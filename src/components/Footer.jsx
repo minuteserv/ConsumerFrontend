@@ -3,6 +3,7 @@ import { COMPANY_INFO } from '../lib/constants';
 
 export function Footer({ className = '' }) {
   const currentYear = new Date().getFullYear();
+  const showAppDownloadButtons = false;
 
   // Scroll to top when footer link is clicked
   const handleFooterLinkClick = () => {
@@ -10,7 +11,7 @@ export function Footer({ className = '' }) {
   };
 
   return (
-    <footer style={{ 
+    <footer className={className} style={{ 
       backgroundColor: '#F5F5F5',
       padding: '40px 40px 24px',
       marginTop: '60px'
@@ -324,75 +325,77 @@ export function Footer({ className = '' }) {
             </div>
 
             {/* App Download Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {/* Apple App Store */}
-              <a
-                href="https://apps.apple.com/app/urbancompany"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'block',
-                  width: '108px',
-                  height: 'auto',
-                  textDecoration: 'none',
-                  transition: 'transform 0.2s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                <img
-                  src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_108,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1648463870745-38fece.png"
-                  alt="Apple App Store"
+            {showAppDownloadButtons && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {/* Apple App Store */}
+                <a
+                  href="https://apps.apple.com/app/urbancompany"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
-                    objectFit: 'contain',
-                    height: '100%',
-                    width: '100%',
-                    backgroundColor: 'transparent',
-                    aspectRatio: '3 / 1',
-                    borderRadius: '4px',
-                    display: 'block'
+                    display: 'block',
+                    width: '108px',
+                    height: 'auto',
+                    textDecoration: 'none',
+                    transition: 'transform 0.2s'
                   }}
-                />
-              </a>
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_108,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1648463870745-38fece.png"
+                    alt="Apple App Store"
+                    style={{
+                      objectFit: 'contain',
+                      height: '100%',
+                      width: '100%',
+                      backgroundColor: 'transparent',
+                      aspectRatio: '3 / 1',
+                      borderRadius: '4px',
+                      display: 'block'
+                    }}
+                  />
+                </a>
 
-              {/* Google Play Store */}
-              <a
-                href="https://play.google.com/store/apps/details?id=com.urbanclap"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: 'block',
-                  width: '108px',
-                  height: 'auto',
-                  textDecoration: 'none',
-                  transition: 'transform 0.2s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                <img
-                  src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_108,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1696419732772-28cd3d.jpeg"
-                  alt="Google Play Store"
+                {/* Google Play Store */}
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.urbanclap"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
-                    objectFit: 'contain',
-                    height: '100%',
-                    width: '100%',
-                    backgroundColor: 'transparent',
-                    aspectRatio: '3 / 1',
-                    borderRadius: '4px',
-                    display: 'block'
+                    display: 'block',
+                    width: '108px',
+                    height: 'auto',
+                    textDecoration: 'none',
+                    transition: 'transform 0.2s'
                   }}
-                />
-              </a>
-            </div>
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  <img
+                    src="https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_108,dpr_2,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1696419732772-28cd3d.jpeg"
+                    alt="Google Play Store"
+                    style={{
+                      objectFit: 'contain',
+                      height: '100%',
+                      width: '100%',
+                      backgroundColor: 'transparent',
+                      aspectRatio: '3 / 1',
+                      borderRadius: '4px',
+                      display: 'block'
+                    }}
+                  />
+                </a>
+              </div>
+            )}
           </div>
         </div>
 
