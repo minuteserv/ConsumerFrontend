@@ -18,7 +18,9 @@
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
+        },
+        "NSLocationWhenInUseUsageDescription": "We need your location to show you nearby services and provide accurate delivery information.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "We need your location to show you nearby services and provide accurate delivery information."
       }
     },
     "android": {
@@ -30,7 +32,9 @@
       "package": "com.minuteserv.mobile",
       "permissions": [
         "INTERNET",
-        "ACCESS_NETWORK_STATE"
+        "ACCESS_NETWORK_STATE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
       ]
     },
     "web": {
