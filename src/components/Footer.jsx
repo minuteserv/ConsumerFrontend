@@ -451,10 +451,7 @@ export function Footer({ className = '' }) {
             fontWeight: 400
           }}>
             <p style={{ margin: '4px 0' }}>
-              * As on December 31, 2024
-            </p>
-            <p style={{ margin: '4px 0' }}>
-              © Copyright {currentYear} {COMPANY_INFO.name} Limited All rights reserved.
+              © {currentYear} {COMPANY_INFO.name}
             </p>
             <p style={{ margin: '4px 0' }}>
               UDYAM REGISTRATION NUMBER: UDYAM-WB-10-0177932
