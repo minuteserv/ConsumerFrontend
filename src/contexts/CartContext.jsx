@@ -104,11 +104,11 @@ export function CartProvider({ children }) {
 
   const getTotalPrice = useCallback(() => {
     return cart.reduce((total, item) => {
+      // Correct price logic: productCost is the selling price, never use marketPrice for calculations
       const price =
         item.productCost ??
         item.price ??
         item.servicePrice ??
-        item.marketPrice ??
         0;
       return total + price * item.quantity;
     }, 0);

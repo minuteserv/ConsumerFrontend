@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Check } from 'lucide-react';
 import { ShareButtonIcon } from './ShareButton';
+import { PriceDisplay } from '@/components/ui/PriceDisplay';
 
 // Safe analytics import - uses loader that handles blocked imports gracefully
 import { trackAddToCart } from '../lib/analytics-loader';
@@ -22,10 +23,12 @@ export function ServiceCard({ service, category, tier, onSelect }) {
            item.category === category && 
            item.tier === tier;
   });
-  const price = service.marketPrice || service.productCost || 0;
-  const originalPrice = service.marketPrice && service.productCost ? service.marketPrice : null;
-  const discount = originalPrice && price < originalPrice 
-    ? Math.round(((originalPrice - price) / originalPrice) * 100) 
+  // Correct price logic: productCost is the selling price, marketPrice is the original (strikethrough)
+  const productCost = service.productCost ? Number(service.productCost) : null;
+  const marketPrice = service.marketPrice ? Number(service.marketPrice) : null;
+  const showDiscount = marketPrice && productCost && marketPrice > productCost;
+  const discount = showDiscount 
+    ? Math.round(((marketPrice - productCost) / marketPrice) * 100) 
     : null;
   const duration = service.durationMinutes ? `${service.durationMinutes} Mins` : 'N/A';
 
@@ -105,7 +108,7 @@ export function ServiceCard({ service, category, tier, onSelect }) {
             {service.name.charAt(0)}
           </span>
         </div>
-        {discount && (
+        {showDiscount && discount && (
           <Badge className="absolute top-2 right-2 bg-destructive z-10">
             {discount}% OFF
           </Badge>
@@ -138,16 +141,12 @@ export function ServiceCard({ service, category, tier, onSelect }) {
         </div>
         
         <div className="flex items-center justify-between">
-          <div>
-            {originalPrice && price < originalPrice ? (
-              <div className="flex items-center gap-2">
-                <span className="text-base md:text-lg font-bold text-foreground">₹{price}</span>
-                <span className="text-xs md:text-sm text-muted-foreground line-through">₹{originalPrice}</span>
-              </div>
-            ) : (
-              <span className="text-base md:text-lg font-bold text-foreground">₹{price}</span>
-            )}
-          </div>
+          <PriceDisplay
+            productCost={productCost}
+            marketPrice={marketPrice}
+            size="default"
+            align="left"
+          />
           <Button
             variant={isInCart ? "default" : "outline"}
             size="sm"

@@ -31,6 +31,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { calculateTaxFee } from "@/lib/utils";
+import { InlinePriceDisplay } from "@/components/ui/PriceDisplay";
 
 export function Cart() {
   const navigate = useNavigate();
@@ -239,25 +240,19 @@ export function Cart() {
 
             {/* Cart Items List */}
             {cart.map((item, idx) => {
-              const price =
-                item.productCost ??
-                item.price ??
-                item.servicePrice ??
-                item.marketPrice ??
-                0;
-              const originalPrice =
-                item.marketPrice &&
-                item.productCost &&
-                item.marketPrice > item.productCost
-                  ? item.marketPrice
-                  : null;
+              // Correct price logic: productCost is the selling price
+              const productCost = item.productCost ? Number(item.productCost) : (item.price || item.servicePrice || 0);
+              const marketPrice = item.marketPrice ? Number(item.marketPrice) : null;
+              const showStrikethrough = marketPrice && productCost && marketPrice > productCost;
+              
+              // Use productCost for calculations
+              const price = productCost;
               const itemTotal = Math.floor(price * item.quantity * 100) / 100;
-              const itemSavings = originalPrice
-                ? Math.floor((originalPrice - price) * item.quantity * 100) /
-                  100
+              const itemSavings = showStrikethrough
+                ? Math.floor((marketPrice - productCost) * item.quantity * 100) / 100
                 : 0;
-              const formattedOriginalTotal = originalPrice
-                ? formatCurrency(originalPrice * item.quantity)
+              const formattedOriginalTotal = showStrikethrough
+                ? formatCurrency(marketPrice * item.quantity)
                 : null;
 
               return (
@@ -364,19 +359,19 @@ export function Cart() {
 
                           {/* Price */}
                           <div className="flex flex-col items-end sm:items-end">
-                            <div className="flex items-center gap-2">
-                              {originalPrice && (
+                            <div className="flex items-center gap-2 flex-wrap justify-end">
+                              {showStrikethrough && (
                                 <span className="text-sm md:text-base text-gray-600 line-through">
-                                ₹{formattedOriginalTotal}
+                                  ₹{formattedOriginalTotal}
                                 </span>
                               )}
                               <span className="text-lg md:text-xl font-semibold text-gray-900">
-                              ₹{formatCurrency(itemTotal)}
+                                ₹{formatCurrency(itemTotal)}
                               </span>
                             </div>
                             {itemSavings > 0 && (
                               <span className="text-xs md:text-sm text-green-600 mt-1">
-                              You save ₹{formatCurrency(itemSavings)}
+                                You save ₹{formatCurrency(itemSavings)}
                               </span>
                             )}
                           </div>

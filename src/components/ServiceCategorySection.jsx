@@ -1,4 +1,5 @@
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { InlinePriceDisplay } from '@/components/ui/PriceDisplay';
 
 export function ServiceCategorySection({ title, subtitle, services, onServiceClick }) {
   return (
@@ -163,6 +164,19 @@ export function ServiceCategorySection({ title, subtitle, services, onServiceCli
                       {service.name.charAt(0)}
                     </div>
                   </div>
+                </div>
+
+                {/* Price Section */}
+                <div className="p-3 md:p-4" style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start'
+                }}>
+                  <InlinePriceDisplay
+                    productCost={service.productCost ?? service.price ?? null}
+                    marketPrice={service.marketPrice ?? service.originalPrice ?? null}
+                    className="text-sm md:text-base font-semibold"
+                  />
                 </div>
               </div>
 

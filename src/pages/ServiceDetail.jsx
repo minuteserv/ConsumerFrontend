@@ -18,6 +18,7 @@ import { useServices } from '../hooks/useServices';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginModal } from '../components/LoginModal';
 import { ShareButton } from '../components/ShareButton';
+import { PriceDisplay } from '@/components/ui/PriceDisplay';
 
 // Safe analytics import - uses loader that handles blocked imports gracefully
 import { trackServiceViewed, trackAddToCart } from '../lib/analytics-loader';
@@ -194,12 +195,12 @@ export function ServiceDetail() {
     );
   }
 
-  const price = service.productCost || service.marketPrice || 0;
-  const originalPrice = service.marketPrice && service.productCost && service.marketPrice > service.productCost 
-    ? service.marketPrice 
-    : null;
-  const discount = originalPrice && price < originalPrice 
-    ? Math.round(((originalPrice - price) / originalPrice) * 100) 
+  // Correct price logic: productCost is the selling price, marketPrice is the original (strikethrough)
+  const productCost = service.productCost ? Number(service.productCost) : null;
+  const marketPrice = service.marketPrice ? Number(service.marketPrice) : null;
+  const showDiscount = marketPrice && productCost && marketPrice > productCost;
+  const discount = showDiscount 
+    ? Math.round(((marketPrice - productCost) / marketPrice) * 100) 
     : null;
   const duration = service.durationMinutes ? `${service.durationMinutes} minutes` : 'Not specified';
 
@@ -411,21 +412,19 @@ export function ServiceDetail() {
 
                 {/* Price */}
                 <div className="text-center mb-4 md:mb-6">
-                  {discount && (
+                  {showDiscount && discount && (
                     <Badge className="bg-red-600 text-white mb-3 text-xs md:text-sm px-3 py-1">
                       {discount}% OFF
                     </Badge>
                   )}
-                  <div className="flex items-center justify-center gap-2 md:gap-3 flex-wrap break-words">
-                    <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 break-words">
-                      ₹{price}
-                    </span>
-                    {originalPrice && (
-                      <span className="text-lg md:text-xl lg:text-2xl text-gray-600 line-through break-words">
-                        ₹{originalPrice}
-                      </span>
-                    )}
-                  </div>
+                  <PriceDisplay
+                    productCost={productCost}
+                    marketPrice={marketPrice}
+                    size="large"
+                    align="center"
+                    showDiscount={false}
+                    className="mb-2"
+                  />
                   <p className="text-xs md:text-sm text-gray-600 mt-2 mb-0">
                     Duration: {duration}
                   </p>

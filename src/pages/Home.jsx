@@ -66,13 +66,15 @@ export function Home() {
       .slice(0, 5);
 
     return hairServices.map((service) => {
+      // Correct price logic: productCost is the selling price, marketPrice is the original (strikethrough)
       const marketPrice =
         service.marketPrice ?? service.market_price ?? null;
       const productCost =
         service.productCost ?? service.product_cost ?? null;
+      // Use productCost as display price, fallback to marketPrice only if productCost doesn't exist
       const displayPrice =
-        marketPrice ??
         productCost ??
+        marketPrice ??
         0;
       const image = service.image || service.image_url || '';
       const rating =
@@ -95,13 +97,15 @@ export function Home() {
           reviewCount !== undefined && reviewCount !== null
             ? `${reviewCount}`
             : '',
-        price:
-          displayPrice && displayPrice > 0
-            ? Math.round(displayPrice).toString()
-            : '',
+        // Pass both prices separately for PriceDisplay component
+        productCost: productCost ? Number(productCost) : null,
+        marketPrice: marketPrice ? Number(marketPrice) : null,
+        price: displayPrice && displayPrice > 0
+          ? Math.round(displayPrice).toString()
+          : '',
         category: service.category,
         originalPrice:
-          marketPrice && productCost
+          marketPrice && productCost && marketPrice > productCost
             ? Math.round(marketPrice).toString()
             : null,
         discount:

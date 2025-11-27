@@ -1,6 +1,8 @@
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { ArrowRight } from 'lucide-react';
+import { InlinePriceDisplay } from '@/components/ui/PriceDisplay';
 
 export function PackageCarousel({ title, subtitle, services, onSeeAll, onServiceClick }) {
   return (
@@ -86,7 +88,16 @@ export function PackageCarousel({ title, subtitle, services, onSeeAll, onService
           paddingBottom: '8px',
           alignItems: 'flex-start'
         }}>
-          {services.map((service, idx) => (
+          {services.map((service, idx) => {
+            // Calculate discount dynamically
+            const productCost = service.productCost ?? (service.price ? Number(service.price) : null);
+            const marketPrice = service.marketPrice ?? (service.originalPrice ? Number(service.originalPrice) : null);
+            const showDiscount = marketPrice && productCost && marketPrice > productCost;
+            const discount = showDiscount 
+              ? Math.round(((marketPrice - productCost) / marketPrice) * 100) 
+              : null;
+
+            return (
             <div
               key={idx}
               tabIndex={0}
@@ -105,32 +116,13 @@ export function PackageCarousel({ title, subtitle, services, onSeeAll, onService
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              {/* Image Container with optional badge */}
+              {/* Image Container with discount badge */}
               <div style={{ position: 'relative', marginBottom: '8px' }}>
-                {/* {service.discount && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '8px',
-                    left: '8px',
-                    zIndex: 10,
-                    backgroundColor: 'rgb(255, 77, 77)',
-                    borderRadius: '4px',
-                    padding: '4px 8px'
-                  }}>
-                    <p style={{
-                      fontFamily: 'system-ui, sans-serif',
-                      fontSize: '12px',
-                      lineHeight: '16px',
-                      color: 'rgb(255, 255, 255)',
-                      fontWeight: 600,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.4px',
-                      margin: 0
-                    }}>
-                      {service.discount}
-                    </p>
-                  </div>
-                )} */}
+                {showDiscount && discount && (
+                  <Badge className="absolute top-2 right-2 bg-destructive z-10 text-xs px-2 py-0.5">
+                    {discount}% OFF
+                  </Badge>
+                )}
                 <div 
                   className="w-[180px] h-[180px] md:w-[233px] md:h-[233px]"
                   style={{
@@ -213,27 +205,16 @@ export function PackageCarousel({ title, subtitle, services, onSeeAll, onService
 
                 {/* Price */}
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
-                  <span className="text-xs md:text-sm leading-4 md:leading-5" style={{
-                    fontFamily: 'system-ui, sans-serif',
-                    color: 'rgb(15, 15, 15)',
-                    fontWeight: 400
-                  }}>
-                    ₹{service.price}
-                  </span>
-                  {/* {service.originalPrice && (
-                    <span className="text-xs md:text-sm leading-4 md:leading-5" style={{
-                      fontFamily: 'system-ui, sans-serif',
-                      color: 'rgb(84, 84, 84)',
-                      fontWeight: 400,
-                      textDecoration: 'line-through'
-                    }}>
-                      ₹{service.originalPrice}
-                    </span>
-                  )} */}
+                  <InlinePriceDisplay
+                    productCost={productCost}
+                    marketPrice={marketPrice}
+                    className="text-xs md:text-sm leading-4 md:leading-5"
+                  />
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
         <ScrollBar orientation="horizontal" className="hidden" />
       </ScrollArea>

@@ -184,14 +184,10 @@ export function CartOrderSummary() {
               </h4>
               <div className="flex flex-col gap-2 max-h-[200px] overflow-y-auto">
                 {cart.map((item, idx) => {
-                  const price =
-                    item.productCost ??
-                    item.price ??
-                    item.servicePrice ??
-                    item.marketPrice ??
-                    0;
+                  // Correct price logic: productCost is the selling price
+                  const productCost = item.productCost ?? item.price ?? item.servicePrice ?? 0;
                   const itemTotal =
-                    Math.floor(price * item.quantity * 100) / 100;
+                    Math.floor(productCost * item.quantity * 100) / 100;
                   return (
                     <div
                       key={idx}
