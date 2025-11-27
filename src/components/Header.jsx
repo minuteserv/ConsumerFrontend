@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MapPin, Search, ShoppingCart, User, ChevronDown, TrendingUp, LogOut } from 'lucide-react';
+import { MapPin, Search, ShoppingCart, User, ChevronDown, TrendingUp, LogOut, Coins } from 'lucide-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { COMPANY_INFO } from '../lib/constants';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLocation } from '../contexts/LocationContext';
 import { LoginModal } from './LoginModal';
 import { LocationModal } from './LocationModal';
+import { PointsBalance } from './loyalty/PointsBalance';
+import { getPointsBalance } from '@/lib/api';
 
 export function Header({ title, showBack = false, showSearch = true }) {
   const navigate = useNavigate();
@@ -22,8 +25,28 @@ export function Header({ title, showBack = false, showSearch = true }) {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [pointsBalance, setPointsBalance] = useState(null);
+  const [loadingPoints, setLoadingPoints] = useState(true);
   const mobileOffsetClass = showSearch ? 'h-[120px]' : 'h-[72px]';
   const userMenuRef = useRef(null);
+
+  // Fetch points balance for mobile header badge
+  useEffect(() => {
+    const fetchPoints = async () => {
+      try {
+        setLoadingPoints(true);
+        const balance = await getPointsBalance();
+        setPointsBalance(balance?.points_balance || 0);
+      } catch (error) {
+        console.error('Failed to load points balance:', error);
+        setPointsBalance(0);
+      } finally {
+        setLoadingPoints(false);
+      }
+    };
+
+    fetchPoints();
+  }, []);
   
   // Listen for login modal open event from BottomNav
   useEffect(() => {
@@ -139,14 +162,22 @@ export function Header({ title, showBack = false, showSearch = true }) {
               <ChevronDown size={14} className="text-gray-500 flex-shrink-0 ml-1" />
             </button>
 
-            {/* Cart Icon - Mobile */}
-            <Link to="/cart" className="relative flex items-center flex-shrink-0">
-              <button className="w-10 h-10 border-2 border-gray-200 rounded-full bg-white flex items-center justify-center p-0 min-h-[44px] min-w-[44px]">
-                <ShoppingCart size={18} className="text-gray-900" />
+            {/* Points Badge - Mobile (Replaces Cart) */}
+            <Link to="/loyalty" className="relative flex items-center flex-shrink-0 group">
+              <button className="w-12 h-12 border-2 border-gray-200 rounded-full bg-white flex items-center justify-center p-0 min-h-[48px] min-w-[48px] hover:border-primary/50 transition-all duration-200 overflow-hidden shadow-sm hover:shadow-md active:scale-95">
+                <div className="w-8 h-8 flex items-center justify-center relative">
+                  <DotLottieReact
+                    src="/Coin.lottie"
+                    loop
+                    autoplay
+                    className="w-full h-full"
+                    style={{ width: '32px', height: '32px' }}
+                  />
+                </div>
               </button>
-              {getTotalItems() > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-5 min-w-[20px] px-1.5 text-xs flex items-center justify-center bg-red-600">
-                  {getTotalItems()}
+              {!loadingPoints && (
+                <Badge className="absolute -top-1 -right-1 h-5 min-w-[20px] px-1.5 text-xs flex items-center justify-center bg-primary text-white font-semibold shadow-sm border-2 border-white z-10">
+                  {pointsBalance?.toLocaleString() || 0}
                 </Badge>
               )}
             </Link>
@@ -355,6 +386,9 @@ export function Header({ title, showBack = false, showSearch = true }) {
                         {user?.phoneNumber || user?.phone_number || ''}
                       </p>
                     </div>
+                    <div className="px-4 py-3 border-b border-gray-200">
+                      <PointsBalance showTier={true} />
+                    </div>
                     <button
                       onClick={(e) => {
                         console.log('[DEBUG] My Bookings button clicked', e);
@@ -376,6 +410,18 @@ export function Header({ title, showBack = false, showSearch = true }) {
                     >
                       <User size={16} />
                       My Bookings
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowUserMenu(false);
+                        navigate('/loyalty');
+                      }}
+                      className="w-full px-4 py-3 border-none bg-transparent text-left cursor-pointer text-sm text-gray-900 flex items-center gap-2 hover:bg-gray-50 transition-colors"
+                    >
+                      <Coins size={16} />
+                      Loyalty Points
                     </button>
                     <button
                       onClick={async (e) => {

@@ -242,3 +242,131 @@ export const getUserAddresses = async () => {
     throw error;
   }
 };
+
+/**
+ * ============================================
+ * LOYALTY POINTS API FUNCTIONS
+ * ============================================
+ */
+
+/**
+ * Get user points balance and tier information
+ * @returns {Promise<Object>} Points balance and tier info
+ */
+export const getPointsBalance = async () => {
+  try {
+    const response = await apiClient.get(API_ENDPOINTS.loyaltyBalance);
+    return {
+      success: true,
+      ...response.data,
+    };
+  } catch (error) {
+    console.error('Get points balance error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get points transaction history
+ * @param {Object} options - Query options
+ * @param {number} options.page - Page number
+ * @param {number} options.limit - Items per page
+ * @param {string} options.type - Transaction type filter (earned, redeemed)
+ * @param {string} options.start_date - Start date filter
+ * @param {string} options.end_date - End date filter
+ * @returns {Promise<Object>} Transaction history
+ */
+export const getPointsHistory = async (options = {}) => {
+  try {
+    const { page = 1, limit = 20, type = null, start_date = null, end_date = null } = options;
+    const queryParams = new URLSearchParams();
+    if (page) queryParams.append('page', page);
+    if (limit) queryParams.append('limit', limit);
+    if (type) queryParams.append('type', type);
+    if (start_date) queryParams.append('start_date', start_date);
+    if (end_date) queryParams.append('end_date', end_date);
+
+    const response = await apiClient.get(`${API_ENDPOINTS.loyaltyHistory}?${queryParams.toString()}`);
+    return {
+      success: true,
+      transactions: response.data?.transactions || response.transactions || [],
+      pagination: response.data?.pagination || response.pagination || {},
+    };
+  } catch (error) {
+    console.error('Get points history error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Redeem points for discount
+ * @param {Object} redemptionData - Redemption data
+ * @param {number} redemptionData.points_to_redeem - Points to redeem (must be multiple of 100)
+ * @param {string} redemptionData.redemption_type - Type: 'discount_voucher' or 'apply_to_booking'
+ * @param {string} redemptionData.booking_id - Optional booking ID if applying to existing booking
+ * @returns {Promise<Object>} Redemption response
+ */
+export const redeemPoints = async (redemptionData) => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.loyaltyRedeem, {
+      points_to_redeem: redemptionData.points_to_redeem,
+      redemption_type: redemptionData.redemption_type || 'discount_voucher',
+      booking_id: redemptionData.booking_id || null,
+    });
+
+    return {
+      success: true,
+      redemption: response.data || response,
+      redemption_id: response.data?.redemption_id || response.redemption_id,
+      voucher_code: response.data?.voucher_code || response.voucher_code,
+      discount_amount: response.data?.discount_amount || response.discount_amount,
+      new_balance: response.data?.new_balance || response.new_balance,
+    };
+  } catch (error) {
+    console.error('Redeem points error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Apply redemption to booking
+ * @param {string} redemptionId - Redemption ID
+ * @param {string} bookingId - Booking ID
+ * @returns {Promise<Object>} Application response
+ */
+export const applyRedemption = async (redemptionId, bookingId) => {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.loyaltyApplyRedemption, {
+      redemption_id: redemptionId,
+      booking_id: bookingId,
+    });
+
+    return {
+      success: true,
+      discount_applied: response.data?.discount_applied || response.discount_applied,
+      redemption: response.data || response,
+    };
+  } catch (error) {
+    console.error('Apply redemption error:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get all loyalty tiers information
+ * @returns {Promise<Object>} Tiers information
+ */
+export const getLoyaltyTiers = async () => {
+  try {
+    const response = await apiClient.get(API_ENDPOINTS.loyaltyTiers);
+    return {
+      success: true,
+      tiers: response.data?.tiers || response.tiers || [],
+      current_tier: response.data?.current_tier || response.current_tier,
+      progress: response.data?.progress || response.progress,
+    };
+  } catch (error) {
+    console.error('Get loyalty tiers error:', error);
+    throw error;
+  }
+};

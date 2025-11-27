@@ -1,7 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingBag, User } from 'lucide-react';
+import { ShoppingBag, User, Coins, ShoppingCart } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useAuth } from '../contexts/AuthContext';
+import { useCart } from '../contexts/CartContext';
 import { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
@@ -12,12 +13,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { LogOut } from 'lucide-react';
 
 export function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
+  const { getTotalItems } = useCart();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navRef = useRef(null);
 
@@ -55,10 +58,8 @@ export function BottomNav() {
     };
   }, []);
 
-  // Hide bottom nav on checkout and cart pages (mobile only - they have their own bottom bars)
-  if (location.pathname === '/checkout' || location.pathname === '/cart') {
-    return null;
-  }
+  // Bottom nav is always visible on mobile web (m-web)
+  // No longer hiding on cart/checkout pages per user request
 
   const navItems = [
     {
@@ -76,6 +77,13 @@ export function BottomNav() {
       label: 'Services',
       icon: ShoppingBag,
       isLogo: false,
+    },
+    {
+      path: '/cart',
+      label: 'Cart',
+      icon: ShoppingCart,
+      isLogo: false,
+      showBadge: true,
     },
     {
       path: '/account',
@@ -136,7 +144,8 @@ export function BottomNav() {
             const Icon = item.icon;
             const isActive = location.pathname === item.path || 
               (item.path === '/' && location.pathname === '/') ||
-              (item.path === '/services' && location.pathname.startsWith('/service'));
+              (item.path === '/services' && location.pathname.startsWith('/service')) ||
+              (item.path === '/cart' && location.pathname === '/cart');
 
             return (
               <Link
@@ -160,7 +169,7 @@ export function BottomNav() {
               >
                 <div 
                   className={cn(
-                    'flex items-center justify-center mb-0.5',
+                    'flex items-center justify-center mb-0.5 relative',
                     isActive && !item.isLogo ? 'text-primary' : ''
                   )}
                   style={{
@@ -172,6 +181,11 @@ export function BottomNav() {
                     <Icon />
                   ) : (
                     <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                  )}
+                  {item.showBadge && getTotalItems() > 0 && (
+                    <Badge className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 text-[10px] flex items-center justify-center bg-red-600 text-white border-0">
+                      {getTotalItems()}
+                    </Badge>
                   )}
                 </div>
                 <span 
@@ -215,6 +229,12 @@ export function BottomNav() {
                 <button className="w-full px-4 py-3 text-left text-sm text-gray-900 flex items-center gap-2 hover:bg-gray-50 transition-colors rounded-lg">
                   <User size={16} />
                   My Bookings
+                </button>
+              </Link>
+              <Link to="/loyalty" onClick={() => setShowUserMenu(false)}>
+                <button className="w-full px-4 py-3 text-left text-sm text-gray-900 flex items-center gap-2 hover:bg-gray-50 transition-colors rounded-lg">
+                  <Coins size={16} />
+                  Loyalty Points
                 </button>
               </Link>
             </div>

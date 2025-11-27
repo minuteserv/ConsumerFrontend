@@ -88,6 +88,16 @@ export function Footer({ className = '' }) {
               }}>
                 Anti-discrimination policy
               </Link>
+              <Link to="/cancellation-refund-policy" onClick={handleFooterLinkClick} style={{
+                fontFamily: 'system-ui, sans-serif',
+                fontSize: '14px',
+                lineHeight: '24px',
+                color: 'rgb(84, 84, 84)',
+                fontWeight: 400,
+                textDecoration: 'none'
+              }}>
+                Cancellation & refund policy
+              </Link>
               {/* <a href="https://investorrelations.urbancompany.com/esg" target="_blank" rel="noopener noreferrer" style={{
                 fontFamily: 'system-ui, sans-serif',
                 fontSize: '14px',
@@ -399,11 +409,39 @@ export function Footer({ className = '' }) {
           </div>
         </div>
 
+        {/* Physical Business Address Section */}
+        <div style={{
+          borderTop: '1px solid rgb(227, 227, 227)',
+          paddingTop: '24px',
+          marginTop: '40px',
+          marginBottom: '24px'
+        }}>
+          <div style={{
+            fontFamily: 'system-ui, sans-serif',
+            fontSize: '14px',
+            lineHeight: '20px',
+            color: 'rgb(15, 15, 15)',
+            fontWeight: 600,
+            marginBottom: '8px'
+          }}>
+            Physical Business Address:
+          </div>
+          <div style={{
+            fontFamily: 'system-ui, sans-serif',
+            fontSize: '14px',
+            lineHeight: '20px',
+            color: 'rgb(84, 84, 84)',
+            fontWeight: 400
+          }}>
+            {COMPANY_INFO.address}
+          </div>
+        </div>
+
         {/* Copyright Section */}
         <div style={{
           borderTop: '1px solid rgb(227, 227, 227)',
           paddingTop: '24px',
-          marginTop: '40px'
+          marginTop: '0'
         }}>
           <div style={{
             fontFamily: 'system-ui, sans-serif',
@@ -416,7 +454,10 @@ export function Footer({ className = '' }) {
               * As on December 31, 2024
             </p>
             <p style={{ margin: '4px 0' }}>
-              © Copyright {currentYear} {COMPANY_INFO.name} Limited All rights reserved. | CIN: L74140DL2014PLC274413
+              © Copyright {currentYear} {COMPANY_INFO.name} Limited All rights reserved.
+            </p>
+            <p style={{ margin: '4px 0' }}>
+              UDYAM REGISTRATION NUMBER: UDYAM-WB-10-0177932
             </p>
             <p style={{ margin: '4px 0' }}>
               Managed by Zingcab

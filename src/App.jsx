@@ -13,6 +13,9 @@ import { ServiceDetail } from './pages/ServiceDetail';
 import { AntiDiscriminationPolicy } from './pages/AntiDiscriminationPolicy';
 import { Terms } from './pages/Terms';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { CancellationRefundPolicy } from './pages/CancellationRefundPolicy';
+import { PointsDashboard } from './pages/PointsDashboard';
+import { PointsHistory } from './pages/PointsHistory';
 import { CartSummary } from './components/CartSummary';
 import { BottomNav } from './components/BottomNav';
 import { Footer } from './components/Footer';
@@ -61,6 +64,22 @@ function AppContent() {
             </ProtectedRoute>
           } 
         />
+        <Route 
+          path="/loyalty" 
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <PointsDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/loyalty/history" 
+          element={
+            <ProtectedRoute requireAuth={true}>
+              <PointsHistory />
+            </ProtectedRoute>
+          } 
+        />
         {/* Public Routes */}
         <Route path="/contact" element={<Contact />} />
         <Route path="/contact-us" element={<Contact />} />
@@ -70,6 +89,7 @@ function AppContent() {
         <Route path="/anti-discrimination-policy" element={<AntiDiscriminationPolicy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/cancellation-refund-policy" element={<CancellationRefundPolicy />} />
       </Routes>
       <CartSummary />
       <Footer className={footerClassName} />

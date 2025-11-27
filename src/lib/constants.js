@@ -51,6 +51,13 @@ export const API_ENDPOINTS = {
   // Dashboard
   dashboard: '/dashboard',
   
+  // Loyalty Points
+  loyaltyBalance: '/loyalty/balance',
+  loyaltyHistory: '/loyalty/history',
+  loyaltyRedeem: '/loyalty/redeem',
+  loyaltyApplyRedemption: '/loyalty/apply-redemption',
+  loyaltyTiers: '/loyalty/tiers',
+  
   // Legacy endpoints (for backward compatibility during migration)
   booking: '/bookings', // Legacy - use bookings
   contactUs: '/contact', // Legacy - use contact
