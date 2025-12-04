@@ -82,6 +82,33 @@ export async function verifyOTP(phoneNumber, otp) {
 }
 
 /**
+ * Resend OTP to phone number
+ * Uses MSG91's retry endpoint
+ * @param {string} phoneNumber - Phone number with country code (e.g., +919876543210)
+ * @param {string} retryType - 'text' for SMS, 'voice' for voice call (default: 'text')
+ * @returns {Promise<{success: boolean, message?: string}>}
+ */
+export async function resendOTP(phoneNumber, retryType = 'text') {
+  try {
+    const response = await apiClient.post(API_ENDPOINTS.resendOTP, {
+      phone_number: phoneNumber,
+      retry_type: retryType,
+    });
+
+    return {
+      success: true,
+      message: response.message || 'OTP resent successfully',
+    };
+  } catch (error) {
+    console.error('Error resending OTP:', error);
+    return {
+      success: false,
+      message: error.message || 'Failed to resend OTP. Please try again.',
+    };
+  }
+}
+
+/**
  * Clear OTP for a phone number (useful for resend)
  * Note: With backend, OTP is managed server-side, but this function
  * is kept for compatibility. Consider requesting a new OTP instead.

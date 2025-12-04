@@ -11,13 +11,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
-import { sendOTP, verifyOTP } from '@/lib/otp';
+import { sendOTP, verifyOTP, resendOTP } from '@/lib/otp';
 
 export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
   const { login } = useAuth();
   const [step, setStep] = useState(1); // 1: Phone, 2: OTP
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '']); // 4-digit OTP
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [resendTimer, setResendTimer] = useState(0);
@@ -50,11 +50,11 @@ export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
     setError('');
 
     // Auto-focus next input
-    if (value && index < 5) {
+    if (value && index < 3) {
       otpInputRefs.current[index + 1]?.focus();
     }
 
-    // Auto-submit when all 6 digits are filled
+    // Auto-submit when all 4 digits are filled
     if (newOtp.every((digit) => digit !== '') && value) {
       handleVerifyOTP(newOtp.join(''));
     }
@@ -71,11 +71,11 @@ export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
   const handleOtpPaste = (e) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').replace(/\D/g, '');
-    if (pastedData.length === 6) {
+    if (pastedData.length === 4) {
       const newOtp = pastedData.split('');
       setOtp(newOtp);
       // Focus last input
-      otpInputRefs.current[5]?.focus();
+      otpInputRefs.current[3]?.focus();
       // Auto-verify
       setTimeout(() => handleVerifyOTP(pastedData), 100);
     }
@@ -118,8 +118,8 @@ export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
 
   // Verify OTP
   const handleVerifyOTP = async (otpValue = otp.join('')) => {
-    if (otpValue.length !== 6) {
-      setError('Please enter 6-digit OTP');
+    if (otpValue.length !== 4) {
+      setError('Please enter 4-digit OTP');
       return;
     }
 
@@ -148,29 +148,56 @@ export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
       // Reset form
       setStep(1);
       setPhoneNumber('');
-      setOtp(['', '', '', '', '', '']);
+      setOtp(['', '', '', '']);
       setOtpSent(false);
     } else {
       setError(result.message || 'Invalid OTP. Please try again.');
       // Clear OTP on error
-      setOtp(['', '', '', '', '', '']);
+      setOtp(['', '', '', '']);
       otpInputRefs.current[0]?.focus();
     }
   };
 
-  // Resend OTP
+  // Resend OTP - uses MSG91 retry endpoint
   const handleResendOTP = async () => {
     if (resendTimer > 0) return;
 
-    setOtp(['', '', '', '', '', '']);
+    setOtp(['', '', '', '']);
     setError('');
-    await handleSendOTP();
+    setIsLoading(true);
+
+    const fullPhoneNumber = `+91${phoneNumber}`;
+    const result = await resendOTP(fullPhoneNumber, 'text');
+
+    setIsLoading(false);
+
+    if (result.success) {
+      setResendTimer(45); // 45 seconds countdown
+      
+      // Start countdown timer
+      const timer = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      // If resend fails (e.g., no OTP generated yet), fall back to sendOTP
+      if (result.message?.includes('No OTP') || result.message?.includes('not generated')) {
+        await handleSendOTP();
+      } else {
+        setError(result.message || 'Failed to resend OTP. Please try again.');
+      }
+    }
   };
 
   // Change phone number
   const handleChangeNumber = () => {
     setStep(1);
-    setOtp(['', '', '', '', '', '']);
+    setOtp(['', '', '', '']);
     setOtpSent(false);
     setResendTimer(0);
     setError('');
@@ -181,7 +208,7 @@ export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
     if (!open) {
       setStep(1);
       setPhoneNumber('');
-      setOtp(['', '', '', '', '', '']);
+      setOtp(['', '', '', '']);
       setError('');
       setOtpSent(false);
       setResendTimer(0);
@@ -351,7 +378,7 @@ export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
                     margin: '8px 0 0 0',
                   }}
                 >
-                  We'll send a 6-digit OTP to verify your number
+                  We'll send a 4-digit OTP to verify your number
                 </p>
               </div>
 
@@ -465,7 +492,7 @@ export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
                     display: 'block',
                   }}
                 >
-                  Enter 6-digit OTP
+                  Enter 4-digit OTP
                 </Label>
                 <div
                   style={{
@@ -488,9 +515,9 @@ export function LoginModal({ open, onOpenChange, onLoginSuccess }) {
                       disabled={isLoading}
                       autoFocus={index === 0}
                       style={{
-                        width: '48px',
-                        height: '48px',
-                        fontSize: '20px',
+                        width: '56px',
+                        height: '56px',
+                        fontSize: '24px',
                         fontWeight: 600,
                         textAlign: 'center',
                         padding: 0,

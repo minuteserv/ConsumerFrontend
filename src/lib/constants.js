@@ -26,6 +26,7 @@ export const API_ENDPOINTS = {
   // Authentication
   sendOTP: '/auth/send-otp',
   verifyOTP: '/auth/verify-otp',
+  resendOTP: '/auth/resend-otp',
   refreshToken: '/auth/refresh-token',
   logout: '/auth/logout',
   getCurrentUser: '/auth/me',
