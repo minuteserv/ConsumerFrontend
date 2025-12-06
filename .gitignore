@@ -5,6 +5,8 @@ dist/
 .vite/
 minuteservAdminFrontend/
 minuteservbackend/
+minuteservMobile/
+minuteservPartnerApp/
 
 
 
