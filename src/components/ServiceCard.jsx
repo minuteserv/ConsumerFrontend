@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Star, Check } from 'lucide-react';
 import { ShareButtonIcon } from './ShareButton';
 import { PriceDisplay } from '@/components/ui/PriceDisplay';
+import { sanitizeForUrl } from '../lib/utils';
 
 // Safe analytics import - uses loader that handles blocked imports gracefully
 import { trackAddToCart } from '../lib/analytics-loader';
@@ -32,8 +33,8 @@ export function ServiceCard({ service, category, tier, onSelect }) {
     : null;
   const duration = service.durationMinutes ? `${service.durationMinutes} Mins` : 'N/A';
 
-  // Generate service ID for routing
-  const serviceId = `${tier}-${category}-${service.name}`.toLowerCase().replace(/\s+/g, '-');
+  // Generate service ID for routing - use sanitizeForUrl to handle special characters
+  const serviceId = `${sanitizeForUrl(tier)}-${sanitizeForUrl(category)}-${sanitizeForUrl(service.name)}`;
 
   const handleCardClick = (e) => {
     // Don't navigate if clicking on the button

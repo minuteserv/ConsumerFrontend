@@ -19,6 +19,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { LoginModal } from '../components/LoginModal';
 import { ShareButton } from '../components/ShareButton';
 import { PriceDisplay } from '@/components/ui/PriceDisplay';
+import { sanitizeForUrl } from '../lib/utils';
 
 // Safe analytics import - uses loader that handles blocked imports gracefully
 import { trackServiceViewed, trackAddToCart } from '../lib/analytics-loader';
@@ -35,16 +36,41 @@ export function ServiceDetail() {
 
   // Find the service from the services data (MUST be before useEffect hooks that use it)
   const service = useMemo(() => {
-    if (!servicesData?.tiers || !serviceId) return null;
+    if (!servicesData?.tiers || !serviceId) {
+      console.warn('[ServiceDetail] No services data or serviceId:', { servicesData, serviceId });
+      return null;
+    }
     
+    // First, try to find by database UUID (for direct links)
+    if (serviceId.length > 20) {
+      // Likely a UUID, search by ID
+      for (const tier of servicesData.tiers) {
+        for (const category of tier.categories) {
+          for (const item of category.items) {
+            if (item.id === serviceId) {
+              console.log('[ServiceDetail] Found service by UUID:', item.name);
+              return {
+                ...item,
+                tier: tier.tier,
+                category: category.category,
+              };
+            }
+          }
+        }
+      }
+    }
+    
+    // Otherwise, match by routeId (sanitized URL format)
+    const attemptedMatches = [];
     for (const tier of servicesData.tiers) {
       for (const category of tier.categories) {
         for (const item of category.items) {
-          // Create a unique ID for the service (for routing)
-          const routeId = `${tier.tier}-${category.category}-${item.name}`.toLowerCase().replace(/\s+/g, '-');
+          // Create a unique ID for the service (for routing) - use sanitizeForUrl
+          const routeId = `${sanitizeForUrl(tier.tier)}-${sanitizeForUrl(category.category)}-${sanitizeForUrl(item.name)}`;
+          attemptedMatches.push({ routeId, name: item.name, tier: tier.tier, category: category.category });
           
-          // Also check if serviceId is a database UUID
-          if (routeId === serviceId || item.id === serviceId) {
+          if (routeId === serviceId) {
+            console.log('[ServiceDetail] Found service by routeId:', item.name);
             return {
               ...item,
               tier: tier.tier,
@@ -54,6 +80,10 @@ export function ServiceDetail() {
         }
       }
     }
+    
+    // Log debug info if service not found
+    console.warn('[ServiceDetail] Service not found. Looking for:', serviceId);
+    console.warn('[ServiceDetail] Attempted matches (first 5):', attemptedMatches.slice(0, 5));
     return null;
   }, [servicesData, serviceId]);
 
@@ -67,7 +97,7 @@ export function ServiceDetail() {
 
     const baseUrl = window.location.origin;
     const serviceUrl = `${baseUrl}/service/${serviceId}`;
-    const serviceName = service.name || 'Service';
+    const serviceName = service?.name || 'Service';
     const price = service.productCost || service.marketPrice || service.price || '';
     const description = `Book ${serviceName}${price ? ` for just ₹${price}` : ''} at Minuteserv. Get salon-quality service at your doorstep!`;
     
@@ -196,13 +226,20 @@ export function ServiceDetail() {
   }
 
   // Correct price logic: productCost is the selling price, marketPrice is the original (strikethrough)
-  const productCost = service.productCost ? Number(service.productCost) : null;
-  const marketPrice = service.marketPrice ? Number(service.marketPrice) : null;
+  // Add defensive checks for missing fields
+  const productCost = service?.productCost ? Number(service.productCost) : null;
+  const marketPrice = service?.marketPrice ? Number(service.marketPrice) : null;
   const showDiscount = marketPrice && productCost && marketPrice > productCost;
   const discount = showDiscount 
     ? Math.round(((marketPrice - productCost) / marketPrice) * 100) 
     : null;
-  const duration = service.durationMinutes ? `${service.durationMinutes} minutes` : 'Not specified';
+  const duration = service?.durationMinutes ? `${service.durationMinutes} minutes` : 'Not specified';
+  
+  // Ensure service name exists (fallback for safety)
+  const serviceName = service?.name || 'Service';
+  const serviceTier = service?.tier || 'Unknown';
+  const serviceCategory = service?.category || 'Unknown';
+  const serviceBrand = service?.brand || null;
 
   const handleAddToCart = () => {
     try {
@@ -261,7 +298,7 @@ export function ServiceDetail() {
               Service Details
             </h1>
             <p className="text-xs text-gray-600 m-0 truncate">
-              {service.name}
+              {serviceName}
             </p>
           </div>
         </div>
@@ -285,20 +322,20 @@ export function ServiceDetail() {
             <div className="flex-1 order-1 min-w-0 w-full lg:w-auto">
               {/* Breadcrumbs */}
               <div className="flex items-center gap-2 mb-3 md:mb-4 text-sm md:text-base text-gray-600 flex-wrap break-words">
-                <span className="break-words">{service.tier}</span>
+                <span className="break-words">{serviceTier}</span>
                 <span>•</span>
-                <span className="break-words">{service.category}</span>
+                <span className="break-words">{serviceCategory}</span>
               </div>
 
               {/* Service Name with Share Button */}
               <div className="flex items-start justify-between gap-4 mb-3 md:mb-4">
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mt-0 leading-tight break-words flex-1">
-                  {service.name}
+                  {serviceName}
                 </h1>
                 <ShareButton 
                   service={service} 
-                  tier={service.tier} 
-                  category={service.category}
+                  tier={serviceTier} 
+                  category={serviceCategory}
                   variant="outline"
                   size="sm"
                   className="shrink-0"
@@ -306,11 +343,11 @@ export function ServiceDetail() {
               </div>
 
               {/* Brand */}
-              {service.brand && (
+              {serviceBrand && (
                 <div className="flex items-center gap-2 mb-4 md:mb-6 flex-wrap">
                   <Package size={18} className="text-gray-600 flex-shrink-0" />
                   <span className="text-sm md:text-base text-gray-600 font-medium break-words">
-                    Brand: {service.brand}
+                    Brand: {serviceBrand}
                   </span>
                 </div>
               )}
@@ -343,20 +380,20 @@ export function ServiceDetail() {
                   <div className="flex items-center gap-3 min-w-0">
                     <Tag size={16} className="text-gray-600 flex-shrink-0" />
                     <span className="text-sm md:text-base text-gray-600 break-words min-w-0">
-                      Service Tier: <strong>{service.tier}</strong>
+                      Service Tier: <strong>{serviceTier}</strong>
                     </span>
                   </div>
                   <div className="flex items-center gap-3 min-w-0">
                     <Tag size={16} className="text-gray-600 flex-shrink-0" />
                     <span className="text-sm md:text-base text-gray-600 break-words min-w-0">
-                      Category: <strong>{service.category}</strong>
+                      Category: <strong>{serviceCategory}</strong>
                     </span>
                   </div>
-                  {service.brand && (
+                  {serviceBrand && (
                     <div className="flex items-center gap-3 min-w-0">
                       <Package size={16} className="text-gray-600 flex-shrink-0" />
                       <span className="text-sm md:text-base text-gray-600 break-words min-w-0">
-                        Product Brand: <strong>{service.brand}</strong>
+                        Product Brand: <strong>{serviceBrand}</strong>
                       </span>
                     </div>
                   )}
@@ -369,7 +406,7 @@ export function ServiceDetail() {
                   About This Service
                 </h3>
                 <p className="text-sm md:text-base text-gray-600 leading-relaxed m-0 break-words">
-                  Professional {service.name.toLowerCase()} service at your doorstep. Our expert beauticians use premium products from {service.brand || 'trusted brands'} to deliver salon-quality results in the comfort of your home. This {duration} service includes complete care and attention to detail.
+                  Professional {serviceName.toLowerCase()} service at your doorstep. Our expert beauticians use premium products from {serviceBrand || 'trusted brands'} to deliver salon-quality results in the comfort of your home. This {duration} service includes complete care and attention to detail.
                 </p>
               </div>
             </div>
@@ -382,10 +419,10 @@ export function ServiceDetail() {
                   style={{
                     backgroundColor: service.image ? 'transparent' : 'rgb(110, 66, 229)'
                   }}>
-                  {service.image ? (
+                  {service?.image ? (
                     <img
                       src={service.image}
-                      alt={service.name}
+                      alt={serviceName}
                       className="w-full h-full object-cover rounded-full"
                       onError={(e) => {
                         // Hide image and show placeholder if image fails to load
@@ -400,12 +437,12 @@ export function ServiceDetail() {
                   <div 
                     className="service-placeholder absolute inset-0 flex items-center justify-center rounded-full"
                     style={{
-                      display: service.image ? 'none' : 'flex',
+                      display: service?.image ? 'none' : 'flex',
                       backgroundColor: 'rgb(110, 66, 229)'
                     }}
                   >
                     <span className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-                      {service.name.charAt(0)}
+                      {serviceName?.charAt(0)?.toUpperCase() || 'S'}
                     </span>
                   </div>
                 </div>
@@ -472,7 +509,7 @@ export function ServiceDetail() {
               Added to Cart!
             </DialogTitle>
             <DialogDescription className="text-sm md:text-base text-gray-600">
-              {service.name} has been added to your cart successfully.
+              {serviceName} has been added to your cart successfully.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-col sm:flex-row justify-center gap-3 mt-6">

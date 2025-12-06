@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag, User, Coins, ShoppingCart } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -18,7 +18,6 @@ import { LogOut } from 'lucide-react';
 
 export function BottomNav() {
   const location = useLocation();
-  const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
   const { getTotalItems } = useCart();
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -58,8 +57,14 @@ export function BottomNav() {
     };
   }, []);
 
-  // Bottom nav is always visible on mobile web (m-web)
-  // No longer hiding on cart/checkout pages per user request
+  // Hide bottom nav on cart and checkout pages for mobile web
+  // These pages have their own bottom action bars with proceed buttons
+  const isCartOrCheckout = location.pathname === '/cart' || location.pathname === '/checkout';
+  
+  // Don't render bottom nav on cart/checkout pages
+  if (isCartOrCheckout) {
+    return null;
+  }
 
   const navItems = [
     {

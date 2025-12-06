@@ -454,10 +454,7 @@ export function Footer({ className = '' }) {
               © {currentYear} {COMPANY_INFO.name}
             </p>
             <p style={{ margin: '4px 0' }}>
-              UDYAM REGISTRATION NUMBER: UDYAM-WB-10-0177932
-            </p>
-            <p style={{ margin: '4px 0' }}>
-              Managed by Zingcab
+              GSTIN 19AYGPL8675C1Z1
             </p>
           </div>
         </div>

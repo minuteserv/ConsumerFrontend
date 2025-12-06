@@ -31,3 +31,23 @@ export function calculateTaxFee(amount) {
 
   return 279;
 }
+
+/**
+ * Sanitize a string for use in URLs
+ * Converts to lowercase, replaces spaces and special characters with hyphens
+ * @param {string} str - The string to sanitize
+ * @returns {string} - The sanitized string
+ */
+export function sanitizeForUrl(str) {
+  if (!str || typeof str !== 'string') return '';
+  
+  return str
+    .toLowerCase()
+    .trim()
+    // Replace spaces and common special characters with hyphens
+    .replace(/[\s_()[\]{}&@#%$*+=|\\/:;"'<>?,!~`]/g, '-')
+    // Replace multiple consecutive hyphens with a single hyphen
+    .replace(/-+/g, '-')
+    // Remove leading and trailing hyphens
+    .replace(/^-+|-+$/g, '');
+}
