@@ -405,9 +405,15 @@ export function ServiceDetail() {
                 <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-3 mt-0">
                   About This Service
                 </h3>
-                <p className="text-sm md:text-base text-gray-600 leading-relaxed m-0 break-words">
-                  Professional {serviceName.toLowerCase()} service at your doorstep. Our expert beauticians use premium products from {serviceBrand || 'trusted brands'} to deliver salon-quality results in the comfort of your home. This {duration} service includes complete care and attention to detail.
-                </p>
+                {service?.about ? (
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed m-0 break-words whitespace-pre-line">
+                    {service.about}
+                  </p>
+                ) : (
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed m-0 break-words">
+                    Professional {serviceName.toLowerCase()} service at your doorstep. Our expert beauticians use premium products from {serviceBrand || 'trusted brands'} to deliver salon-quality results in the comfort of your home. This {duration} service includes complete care and attention to detail.
+                  </p>
+                )}
               </div>
             </div>
 

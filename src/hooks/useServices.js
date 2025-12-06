@@ -53,6 +53,7 @@ function transformApiServices(apiServices) {
       marketPrice: service.marketPrice,
       durationMinutes: service.durationMinutes,
       image: service.image,
+      about: service.about,
       category: service.category,
       tier: service.tier,
     });
