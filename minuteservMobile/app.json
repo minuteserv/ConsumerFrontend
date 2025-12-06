@@ -30,6 +30,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.minuteserv.mobile",
+      "versionCode": 2,
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE",
